@@ -15,7 +15,8 @@ void Mesh::initialiseQuad()
 
 	// generate buffers
 	glGenBuffers(1, &m_vbo);
-	glGenVertexArrays(1, &m_vao);
+	glGenVertexArrays(1, &m_vao);
+
 	// bind vertex array aka a mesh wrapper
 	glBindVertexArray(m_vao);
 	// bind vertex buffer
@@ -31,24 +32,34 @@ void Mesh::initialiseQuad()
 	vertices[4].m_position = { 0.5f, 0, 0.5f, 1 };
 	vertices[5].m_position = { 0.5f, 0, -0.5f, 1 };
 
+	vertices[0].m_normal = { 0, 1, 0, 0 };
+	vertices[1].m_normal = { 0, 1, 0, 0 };
+	vertices[2].m_normal = { 0, 1, 0, 0 };
+	vertices[3].m_normal = { 0, 1, 0, 0 };
+	vertices[4].m_normal = { 0, 1, 0, 0 };
+	vertices[5].m_normal = { 0, 1, 0, 0 };
+
 	vertices[0].m_texCoord = { 0, 1 }; // bottom left
 	vertices[1].m_texCoord = { 1, 1 }; // bottom right
 	vertices[2].m_texCoord = { 0, 0 }; // top left
 	vertices[3].m_texCoord = { 0, 0 }; // top left
 	vertices[4].m_texCoord = { 1, 1 }; // bottom right
-	vertices[5].m_texCoord = { 1, 0 }; // top right
-
+	vertices[5].m_texCoord = { 1, 0 }; // top right
 
 	// fill vertex buffer
-	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(Vertex), vertices, GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 6 * sizeof(Vertex), vertices, GL_STATIC_DRAW);
+
 	// enable first element as position
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex), 0);
 
+	// enable second element as normal
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_TRUE, sizeof(Vertex), (void*)16);
+
 	// enable third element as texture
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE,
-		sizeof(Vertex), (void*)32);
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)32);
 
 	// unbind buffers
 	glBindVertexArray(0);

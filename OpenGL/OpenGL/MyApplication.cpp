@@ -64,7 +64,34 @@ int MyApplication::startup()
 		printf("Shader Error: %s\n", m_shader.getLastError());
 	}
 
+	// load vertex textured shader from file
+	m_texturedShader.loadShader(aie::eShaderStage::VERTEX,
+		"./shaders/textured.vert");
+	// load fragment textured shader from file
+	m_texturedShader.loadShader(aie::eShaderStage::FRAGMENT,
+		"./shaders/textured.frag");
+	if (m_texturedShader.link() == false) {
+		printf("Shader Error: %s\n", m_texturedShader.getLastError());
+	}
+
+	// load vertex phong shader from file
+	m_phongShader.loadShader(aie::eShaderStage::VERTEX,
+		"./shaders/phong.vert");
+	// load fragment phong shader from file
+	m_phongShader.loadShader(aie::eShaderStage::FRAGMENT,
+		"./shaders/phong.frag");
+	if (m_phongShader.link() == false) {
+		printf("Shader Error: %s\n", m_phongShader.getLastError());
+	}
+
+	// Grid texture
 	if (m_gridTexture.load("./textures/numbered_grid.tga") == false) {
+		printf("Failed to load texture!\n");
+		return false;
+	}
+
+	// Denim texture
+	if (m_denimTexture.load("./textures/denim-textures-3.jpg") == false) {
 		printf("Failed to load texture!\n");
 		return false;
 	}
@@ -77,15 +104,47 @@ int MyApplication::startup()
 		0, 0, 10, 0,
 		0, 0, 0, 1		};
 
-	//if (m_bunnyMesh.load("./stanford/bunny.obj") == false) {
-	//	printf("Bunny Mesh Error!\n");
-	//	return false;
-	//}
-	//m_bunnyTransform = {
-	//	0.5f, 0, 0, 0,
-	//	0, 0.5f, 0, 0,
-	//	0, 0, 0.5f, 0,
-	//	0, 0, 0, 1		};
+	// Bunny
+	if (m_bunnyMesh.load("./stanford/bunny.obj") == false) {
+		printf("Bunny Mesh Error!\n");
+		return false;
+	}
+
+	m_bunnyTransform = {
+		0.5f, 0, 0, 0,
+		0, 0.5f, 0, 0,
+		0, 0, 0.5f, 0,
+		0, 0, 0, 1		};
+
+	// Dragon
+	if (m_dragonMesh.load("./stanford/dragon.obj") == false) {
+		printf("Dragon Mesh Error!\n");
+		return false;
+	}
+
+	m_dragonTransform = {
+		0.5f, 0, 0, 0,
+		0, 0.5f, 0, 0,
+		0, 0, 0.5f, 0,
+		0, 0, 0, 1 };
+
+	// Spear
+	if (m_spearMesh.load("./soulspear/soulspear.obj",
+		true, true) == false) {
+		printf("Soulspear Mesh Error!\n");
+		return false;
+	}
+
+	m_spearTransform = {
+	1, 0, 0, 0,
+	0, 1, 0, 0,
+	0, 0, 1, 0,
+	0, 0, 0, 1	};
+
+	// Light settings
+	m_light.diffuse = { 1, 1, 0 };
+	m_light.specular = { 1, 1, 0 };
+	m_ambientLight = { 0.25f, 0.25f, 0.25f };
 
 	return 0;
 }
@@ -109,7 +168,10 @@ bool MyApplication::update()
 	m_deltaTime = m_currTime - m_prevTime;
 	m_prevTime = m_currTime;
 
-	// our game logic and update code goes here!
+	// rotate light
+	m_light.direction = glm::normalize(vec3(glm::cos(m_currTime * 2), glm::sin(m_currTime * 2), 0));
+
+	// Draw 
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -117,42 +179,48 @@ bool MyApplication::update()
 	Gizmos::addTransform(glm::mat4(1));
 	vec4 white(1);
 	vec4 black(0, 0, 0, 1);
-	for (int i = 0; i < 21; ++i) {
-		Gizmos::addLine(vec3(-10 + i, 0, 10),
-			vec3(-10 + i, 0, -10),
-			i == 10 ? white : black);
-		Gizmos::addLine(vec3(10, 0, -10 + i),
-			vec3(-10, 0, -10 + i),
-			i == 10 ? white : black);
+	for (int i = 0; i < 21; ++i) 
+	{
+		Gizmos::addLine(vec3(-10 + i, 0, 10), vec3(-10 + i, 0, -10), i == 10 ? white : black);
+		Gizmos::addLine(vec3(10, 0, -10 + i), vec3(-10, 0, -10 + i), i == 10 ? white : black);
 	}
-
-	// load imaginary texture
-	aie::Texture texture1;
-	texture1.load("mytexture.png");
-
-	// create a 2x2 black-n-white checker texture
-	// RED simply means one colour channel, i.e. grayscale
-	aie::Texture texture2;
-	unsigned char texelData[4] = { 0, 255, 255, 0 };
-	texture2.create(2, 2, aie::Texture::RED, texelData);
 
 	// bind shader
 	//m_shader.bind();
-	m_texturedShader.bind();
+	//m_texturedShader.bind();
+	m_phongShader.bind();
 
-	// bind transform quad
-	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
+	// bind light
+	m_phongShader.bindUniform("Ia", m_ambientLight);
+	m_phongShader.bindUniform("Id", m_light.diffuse);
+	m_phongShader.bindUniform("Is", m_light.specular);
+	m_phongShader.bindUniform("LightDirection", m_light.direction);
+
+	// bind transform 
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
 	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_bunnyTransform;
-	m_texturedShader.bindUniform("ProjectionViewModel", pvm);
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_spearTransform;
+	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
+
+	m_phongShader.bindUniform("ProjectionViewModel", pvm);
+
+	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
+
+	// bind transforms for lighting
+	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+
+	m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 
 	// bind texture location
-	m_texturedShader.bindUniform("diffuseTexture", 0);
+	//m_texturedShader.bindUniform("diffuseTexture", 0);
+
 	// bind texture to specified location
-	m_gridTexture.bind(0);
+	//m_denimTexture.bind(0);
 
 	// draw quad
-	m_quadMesh.draw();
-	//m_bunnyMesh.draw();
+	//m_quadMesh.draw();
+	m_dragonMesh.draw();
+	//m_spearMesh.draw();
 
 	Gizmos::draw(m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix());
 
@@ -177,12 +245,3 @@ unsigned int MyApplication::getWindowHeight()
 	return height;
 }
 
-glm::vec2 getScreenRes()
-{
-	RECT desktop;
-	const HWND hDesktop = GetDesktopWindow();
-
-	GetWindowRect(hDesktop, &desktop);
-
-	return glm::vec2(desktop.right, desktop.bottom);
-}

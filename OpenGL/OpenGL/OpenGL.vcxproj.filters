@@ -88,5 +88,17 @@
     <None Include="..\data\shaders\simple.vert">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\data\shaders\textured.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\data\shaders\textured.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\data\shaders\phong.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\data\shaders\phong.frag">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

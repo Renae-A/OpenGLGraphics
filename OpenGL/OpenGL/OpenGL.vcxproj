@@ -192,8 +192,12 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\data\shaders\phong.frag" />
+    <None Include="..\data\shaders\phong.vert" />
     <None Include="..\data\shaders\simple.frag" />
     <None Include="..\data\shaders\simple.vert" />
+    <None Include="..\data\shaders\textured.frag" />
+    <None Include="..\data\shaders\textured.vert" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

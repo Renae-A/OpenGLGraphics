@@ -27,13 +27,33 @@ private:
 	double			m_currTime;
 	double			m_deltaTime;
 
+	struct Light 
+	{
+		glm::vec3 direction;
+		glm::vec3 diffuse;
+		glm::vec3 specular;
+	};
+
+	Light				m_light;
+	glm::vec3			m_ambientLight;
+
 	aie::ShaderProgram	m_shader;
 	aie::ShaderProgram	m_texturedShader;
+	aie::ShaderProgram	m_phongShader;
 
 	aie::Texture		m_gridTexture;
+	aie::Texture		m_denimTexture;
 
 	Mesh				m_quadMesh;
 	glm::mat4			m_quadTransform;
 	aie::OBJMesh		m_bunnyMesh;
 	glm::mat4			m_bunnyTransform;
+
+	aie::Texture		m_spearTexture;
+
+	aie::OBJMesh		m_spearMesh;
+	glm::mat4			m_spearTransform;
+
+	aie::OBJMesh		m_dragonMesh;
+	glm::mat4			m_dragonTransform;
 };
