@@ -192,6 +192,8 @@
     <ClCompile Include="Texture.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\data\shaders\normalmap.frag" />
+    <None Include="..\data\shaders\normalmap.vert" />
     <None Include="..\data\shaders\phong.frag" />
     <None Include="..\data\shaders\phong.vert" />
     <None Include="..\data\shaders\simple.frag" />

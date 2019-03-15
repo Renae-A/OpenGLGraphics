@@ -84,6 +84,16 @@ int MyApplication::startup()
 		printf("Shader Error: %s\n", m_phongShader.getLastError());
 	}
 
+	// load vertex normal map shader from file
+	m_normalMapShader.loadShader(aie::eShaderStage::VERTEX,
+		"./shaders/normalmap.vert");
+	// load fragment normal map shader from file
+	m_normalMapShader.loadShader(aie::eShaderStage::FRAGMENT,
+		"./shaders/normalmap.frag");
+	if (m_normalMapShader.link() == false) {
+		printf("Shader Error: %s\n", m_normalMapShader.getLastError());
+	}
+
 	// Grid texture
 	if (m_gridTexture.load("./textures/numbered_grid.tga") == false) {
 		printf("Failed to load texture!\n");
@@ -188,13 +198,20 @@ bool MyApplication::update()
 	// bind shader
 	//m_shader.bind();
 	//m_texturedShader.bind();
-	m_phongShader.bind();
+	//m_phongShader.bind();
+	m_normalMapShader.bind();
 
 	// bind light
-	m_phongShader.bindUniform("Ia", m_ambientLight);
-	m_phongShader.bindUniform("Id", m_light.diffuse);
-	m_phongShader.bindUniform("Is", m_light.specular);
-	m_phongShader.bindUniform("LightDirection", m_light.direction);
+	//m_phongShader.bindUniform("Ia", m_ambientLight);
+	//m_phongShader.bindUniform("Id", m_light.diffuse);
+	//m_phongShader.bindUniform("Is", m_light.specular);
+	//m_phongShader.bindUniform("LightDirection", m_light.direction);
+
+	// bind light
+	m_normalMapShader.bindUniform("Ia", m_ambientLight);
+	m_normalMapShader.bindUniform("Id", m_light.diffuse);
+	m_normalMapShader.bindUniform("Is", m_light.specular);
+	m_normalMapShader.bindUniform("LightDirection", m_light.direction);
 
 	// bind transform 
 	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
@@ -202,20 +219,24 @@ bool MyApplication::update()
 	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_spearTransform;
 	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
 
-	m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
 
 	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
 
 	// bind transforms for lighting
-	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	//m_normalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
+	m_normalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
 
-	m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	//m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	m_normalMapShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 
 	// bind texture location
-	//m_texturedShader.bindUniform("diffuseTexture", 0);
+	m_normalMapShader.bindUniform("normalTexture", 0);
 
 	// bind texture to specified location
-	//m_denimTexture.bind(0);
+	m_gridTexture.bind(0);
 
 	// draw quad
 	//m_quadMesh.draw();

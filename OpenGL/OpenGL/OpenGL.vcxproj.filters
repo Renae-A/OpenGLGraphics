@@ -100,5 +100,11 @@
     <None Include="..\data\shaders\phong.frag">
       <Filter>Shaders</Filter>
     </None>
+    <None Include="..\data\shaders\normalmap.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="..\data\shaders\normalmap.vert">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>
