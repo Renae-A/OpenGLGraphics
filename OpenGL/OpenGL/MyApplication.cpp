@@ -94,6 +94,17 @@ int MyApplication::startup()
 		printf("Shader Error: %s\n", m_normalMapShader.getLastError());
 	}
 
+	// load vertex oren-nayar BRDF shader from file
+	m_orenNayarShadar.loadShader(aie::eShaderStage::VERTEX,
+		"./shaders/oren-nayar.vert");
+	// load fragment normal map shader from file
+	m_orenNayarShadar.loadShader(aie::eShaderStage::FRAGMENT,
+		"./shaders/oren-nayar.frag");
+	if (m_orenNayarShadar.link() == false) {
+		printf("Shader Error: %s\n", m_orenNayarShadar.getLastError());
+	}
+
+
 	// Grid texture
 	if (m_gridTexture.load("./textures/numbered_grid.tga") == false) {
 		printf("Failed to load texture!\n");
@@ -106,6 +117,36 @@ int MyApplication::startup()
 		return false;
 	}
 
+	// Popcorn texture
+	if (m_popcornTexture.load("./textures/popcorn.jpg") == false) {
+		printf("Failed to load texture!\n");
+		return false;
+	}
+
+	// Carpet texture
+	if (m_carpetTexture.load("./textures/carpet.jpg") == false) {
+		printf("Failed to load texture!\n");
+		return false;
+	}
+
+	// Starry night texture
+	if (m_starrynightTexture.load("./textures/starrynight.jpg") == false) {
+		printf("Failed to load texture!\n");
+		return false;
+	}
+
+	// Lightning texture
+	if (m_lightningTexture.load("./textures/lightning.png") == false) {
+		printf("Failed to load texture!\n");
+		return false;
+	}
+
+	// Tartan texture
+	if (m_tartanTexture.load("./textures/tartan.jpg") == false) {
+		printf("Failed to load texture!\n");
+		return false;
+	}
+
 	m_quadMesh.initialiseQuad();
 
 	m_quadTransform = {
@@ -114,7 +155,7 @@ int MyApplication::startup()
 		0, 0, 10, 0,
 		0, 0, 0, 1		};
 
-	// Bunny
+	// Bunny -----------------------------------------------
 	if (m_bunnyMesh.load("./stanford/bunny.obj") == false) {
 		printf("Bunny Mesh Error!\n");
 		return false;
@@ -126,7 +167,7 @@ int MyApplication::startup()
 		0, 0, 0.5f, 0,
 		0, 0, 0, 1		};
 
-	// Dragon
+	// Dragon -----------------------------------------------
 	if (m_dragonMesh.load("./stanford/dragon.obj") == false) {
 		printf("Dragon Mesh Error!\n");
 		return false;
@@ -138,7 +179,31 @@ int MyApplication::startup()
 		0, 0, 0.5f, 0,
 		0, 0, 0, 1 };
 
-	// Spear
+	// Lucy ----------------------------------------------
+	if (m_lucyMesh.load("./stanford/lucy.obj") == false) {
+		printf("Lucy Mesh Error!\n");
+		return false;
+	}
+
+	m_lucyTransform = {
+		0.5f, 0, 0, 0,
+		0, 0.5f, 0, 0,
+		0, 0, 0.5f, 0,
+		0, 0, 0, 1 };
+
+	// Buddha ------------------------------------------------
+	if (m_buddhaMesh.load("./stanford/buddha.obj") == false) {
+		printf("Buddha Mesh Error!\n");
+		return false;
+	}
+
+	m_buddhaTransform = {
+		0.5f, 0, 0, 0,
+		0, 0.5f, 0, 0,
+		0, 0, 0.5f, 0,
+		0, 0, 0, 1 };
+
+	// Spear ---------------------------------------
 	if (m_spearMesh.load("./soulspear/soulspear.obj",
 		true, true) == false) {
 		printf("Soulspear Mesh Error!\n");
@@ -173,12 +238,12 @@ bool MyApplication::update()
 
 	m_camera.update();
 
-	// update deltaTime
+	// Update deltaTime
 	m_currTime = glfwGetTime();
 	m_deltaTime = m_currTime - m_prevTime;
 	m_prevTime = m_currTime;
 
-	// rotate light
+	// Rotate light
 	m_light.direction = glm::normalize(vec3(glm::cos(m_currTime * 2), glm::sin(m_currTime * 2), 0));
 
 	// Draw 
@@ -195,63 +260,215 @@ bool MyApplication::update()
 		Gizmos::addLine(vec3(10, 0, -10 + i), vec3(-10, 0, -10 + i), i == 10 ? white : black);
 	}
 
-	// bind shader
-	//m_shader.bind();
-	//m_texturedShader.bind();
-	//m_phongShader.bind();
-	m_normalMapShader.bind();
+	// ------------------- Simple shader for quad --------------------
 
-	// bind light
+	//// Bind shader
+	//m_shader.bind();
+	//// Bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
+	//m_shader.bindUniform("ProjectionViewModel", pvm);
+	//// Draw quad
+	//m_quadMesh.draw();
+
+	// ------------------- Simple shader for bunny --------------------
+
+	//// Bind shader
+	//m_shader.bind();
+	//// Bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_bunnyTransform;
+	//m_shader.bindUniform("ProjectionViewModel", pvm);
+	//// Draw bunny
+	//m_bunnyMesh.draw();
+
+	// ------------------- Simple shader for dragon --------------------
+
+	//// Bind shader
+	//m_shader.bind();
+	//// Bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
+	//m_shader.bindUniform("ProjectionViewModel", pvm);
+	//// Draw dragon
+	//m_dragonMesh.draw();
+
+	// ------------------- Textured shader for quad --------------------
+
+	//// Bind shader
+	//m_texturedShader.bind();
+	//// Bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
+	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
+	//// Bind texture location
+	//m_texturedShader.bindUniform("diffuseTexture", 0);
+	//// Bind texture to specified location
+	//m_gridTexture.bind(0);
+	//// Draw quad
+	//m_quadMesh.draw();
+
+	// ------------------- Textured shader for spear --------------------
+
+	//// Bind shader
+	//m_texturedShader.bind();
+	//// Bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_spearTransform;
+	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
+	//// Draw mesh
+	//m_spearMesh.draw();
+
+	// ------------------- Lighting with phong shader for quad (only works when bunny is also drawn?) --------------------
+
+	//// bind phong shader program
+	//m_phongShader.bind();
+	//// bind light
 	//m_phongShader.bindUniform("Ia", m_ambientLight);
 	//m_phongShader.bindUniform("Id", m_light.diffuse);
 	//m_phongShader.bindUniform("Is", m_light.specular);
 	//m_phongShader.bindUniform("LightDirection", m_light.direction);
-
-	// bind light
-	m_normalMapShader.bindUniform("Ia", m_ambientLight);
-	m_normalMapShader.bindUniform("Id", m_light.diffuse);
-	m_normalMapShader.bindUniform("Is", m_light.specular);
-	m_normalMapShader.bindUniform("LightDirection", m_light.direction);
-
-	// bind transform 
+	//// bind transform
 	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_bunnyTransform;
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_spearTransform;
-	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
-
 	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
-	m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
-
-	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
-
-	// bind transforms for lighting
-	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
-	//m_normalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
-	m_normalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
-
-	//m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
-	m_normalMapShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
-
-	// bind texture location
-	m_normalMapShader.bindUniform("normalTexture", 0);
-
-	// bind texture to specified location
-	m_gridTexture.bind(0);
-
-	// draw quad
+	//// bind transforms for lighting
+	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_quadTransform)));
+	//// draw quad
 	//m_quadMesh.draw();
-	m_dragonMesh.draw();
+
+	// ------------------- Lighting with phong shader for bunny --------------------
+
+	//// bind phong shader program
+	//m_phongShader.bind();
+	//// bind light
+	//m_phongShader.bindUniform("Ia", m_ambientLight);
+	//m_phongShader.bindUniform("Id", m_light.diffuse);
+	//m_phongShader.bindUniform("Is", m_light.specular);
+	//m_phongShader.bindUniform("LightDirection", m_light.direction);
+	//// bind transform
+	//auto pvm2 = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_bunnyTransform;
+	//m_phongShader.bindUniform("ProjectionViewModel", pvm2);
+	//// bind transforms for lighting
+	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_bunnyTransform)));
+	//// draw bunny
+	//m_bunnyMesh.draw();
+
+	// ------------------- Lighting with phong shader for dragon --------------------
+
+	//// bind phong shader program
+	//m_phongShader.bind();
+	//// bind light
+	//m_phongShader.bindUniform("Ia", m_ambientLight);
+	//m_phongShader.bindUniform("Id", m_light.diffuse);
+	//m_phongShader.bindUniform("Is", m_light.specular);
+	//m_phongShader.bindUniform("LightDirection", m_light.direction);
+	//// bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
+	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	//// bind transforms for lighting
+	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	//// draw dragon
+	//m_dragonMesh.draw();
+
+	// ------------------- Lighting with phong shader for lucy --------------------
+
+	//// bind phong shader program
+	//m_phongShader.bind();
+	//// bind light
+	//m_phongShader.bindUniform("Ia", m_ambientLight);
+	//m_phongShader.bindUniform("Id", m_light.diffuse);
+	//m_phongShader.bindUniform("Is", m_light.specular);
+	//m_phongShader.bindUniform("LightDirection", m_light.direction);
+	//// bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_lucyTransform;
+	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	//// bind transforms for lighting
+	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_lucyTransform)));
+	//// draw lucy
+	//m_lucyMesh.draw();
+
+	// ------------------- Lighting with phong shader for buddha --------------------
+
+	//// bind phong shader program
+	//m_phongShader.bind();
+	//// bind light
+	//m_phongShader.bindUniform("Ia", m_ambientLight);
+	//m_phongShader.bindUniform("Id", m_light.diffuse);
+	//m_phongShader.bindUniform("Is", m_light.specular);
+	//m_phongShader.bindUniform("LightDirection", m_light.direction);
+	//// bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_buddhaTransform;
+	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	//// bind transforms for lighting
+	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_buddhaTransform)));
+	//// draw buddha
+	//m_buddhaMesh.draw();
+
+	// ------------------- Normal map shader for spear (make changes within .frag file to change colours to normal, etc.) -------------------- 
+
+	//// Bind shader
+	//m_normalMapShader.bind();
+	//// Bind light 
+	//m_normalMapShader.bindUniform("Ia", m_ambientLight);
+	//m_normalMapShader.bindUniform("Id", m_light.diffuse);
+	//m_normalMapShader.bindUniform("Is", m_light.specular);
+	//m_normalMapShader.bindUniform("LightDirection", m_light.direction);
+	//// Bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_spearTransform;
+	//m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
+	//m_normalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
+	//// Bind camera
+	//m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	//// Draw spear
 	//m_spearMesh.draw();
+
+	// ------------------- Normal map shader with texture for dragon -------------------- 
+
+	//// Bind shader
+	//m_phongShader.bind();
+	//// Bind light 
+	//m_phongShader.bindUniform("Ia", m_ambientLight);
+	//m_phongShader.bindUniform("Id", m_light.diffuse);
+	//m_phongShader.bindUniform("Is", m_light.specular);
+	//m_phongShader.bindUniform("LightDirection", m_light.direction);
+	//// Bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
+	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	//// Bind camera
+	//m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	//// Bind texture location
+	//m_phongShader.bindUniform("diffuseTex", 0);
+	//// Bind texture to specified location
+	//m_denimTexture.bind(0);
+	//// Draw dragon
+	//m_dragonMesh.draw();
+
+	// ------------------- (Shiny look) Oren-Nayar BRDF for dragon -------------------- 
+
+	// Bind Oren-Nayar BDRF shader program
+	m_orenNayarShadar.bind();
+	// bind light
+	m_orenNayarShadar.bindUniform("Ia", m_ambientLight);
+	m_orenNayarShadar.bindUniform("Id", m_light.diffuse);
+	m_orenNayarShadar.bindUniform("Is", m_light.specular);
+	m_orenNayarShadar.bindUniform("LightDirection", m_light.direction);
+	m_orenNayarShadar.bindUniform("Roughness", 0.5f);
+	// bind transform
+	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
+	m_orenNayarShadar.bindUniform("ProjectionViewModel", pvm);
+	// bind transforms for lighting
+	m_orenNayarShadar.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	// Bind camera
+	m_orenNayarShadar.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	// draw dragon
+	m_dragonMesh.draw();
 
 	Gizmos::draw(m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix());
 
-	// so does our render code!
+	// So does our render code!
 	glfwSwapBuffers(m_window);
 	glfwPollEvents();
 	
 	return (glfwWindowShouldClose(m_window) == false && glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS);
 }
 
+// Returns the width of the screen
 unsigned int MyApplication::getWindowWidth()  
 {
 	int width = 0, height = 0;
@@ -259,6 +476,7 @@ unsigned int MyApplication::getWindowWidth()
 	return width;
 }
 
+// Returns the height of the screen
 unsigned int MyApplication::getWindowHeight() 
 {
 	int width = 0, height = 0;

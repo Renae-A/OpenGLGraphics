@@ -194,6 +194,8 @@
   <ItemGroup>
     <None Include="..\data\shaders\normalmap.frag" />
     <None Include="..\data\shaders\normalmap.vert" />
+    <None Include="..\data\shaders\oren-nayar.frag" />
+    <None Include="..\data\shaders\oren-nayar.vert" />
     <None Include="..\data\shaders\phong.frag" />
     <None Include="..\data\shaders\phong.vert" />
     <None Include="..\data\shaders\simple.frag" />

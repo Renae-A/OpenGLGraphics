@@ -41,12 +41,19 @@ private:
 	aie::ShaderProgram	m_texturedShader;
 	aie::ShaderProgram	m_phongShader;
 	aie::ShaderProgram	m_normalMapShader;
+	aie::ShaderProgram	m_orenNayarShadar;
 
 	aie::Texture		m_gridTexture;
 	aie::Texture		m_denimTexture;
+	aie::Texture		m_popcornTexture;
+	aie::Texture		m_carpetTexture;
+	aie::Texture		m_starrynightTexture;
+	aie::Texture		m_lightningTexture;
+	aie::Texture		m_tartanTexture;
 
 	Mesh				m_quadMesh;
-	glm::mat4			m_quadTransform;
+	glm::mat4			m_quadTransform;
+
 	aie::OBJMesh		m_bunnyMesh;
 	glm::mat4			m_bunnyTransform;
 
@@ -57,4 +64,10 @@ private:
 
 	aie::OBJMesh		m_dragonMesh;
 	glm::mat4			m_dragonTransform;
+
+	aie::OBJMesh		m_lucyMesh;
+	glm::mat4			m_lucyTransform;
+
+	aie::OBJMesh		m_buddhaMesh;
+	glm::mat4			m_buddhaTransform;
 };

@@ -104,6 +104,8 @@ bool OBJMesh::load(const char* filename, bool loadTextures /* = true */, bool fl
 			// flip the T / V (might not always be needed, depends on how mesh was made)
 			if (hasTexture)
 				vertices[i].texcoord = glm::vec2(s.mesh.texcoords[i * 2 + 0], flipTextureV ? 1.0f - s.mesh.texcoords[i * 2 + 1] : s.mesh.texcoords[i * 2 + 1]);
+			else
+				vertices[i].texcoord = glm::vec2(vertices[i].position.x, vertices[i].position.z);
 		}
 
 		// calculate for normal mapping

@@ -1,4 +1,4 @@
-// classic Phong vertex shader
+// classic Oren-Nayar vertex shader
 #version 410
 
 layout( location = 0 ) in vec4 Position;

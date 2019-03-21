@@ -13,14 +13,14 @@ uniform sampler2D diffuseTexture;
 uniform sampler2D specularTexture;
 uniform sampler2D normalTexture;
 
-uniform vec3 Ka; // material ambient
-uniform vec3 Kd; // material diffuse
-uniform vec3 Ks; // material specular
+uniform vec3 Ka;					// material ambient
+uniform vec3 Kd;					// material diffuse
+uniform vec3 Ks;					// material specular
 uniform float specularPower;
 
-uniform vec3 Ia; // light ambient
-uniform vec3 Id; // light diffuse
-uniform vec3 Is; // light specular
+uniform vec3 Ia;					// light ambient
+uniform vec3 Id;					// light diffuse
+uniform vec3 Is;					// light specular
 uniform vec3 LightDirection;
 
 uniform vec3 CameraPosition;
