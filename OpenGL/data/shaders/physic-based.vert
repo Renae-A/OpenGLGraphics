@@ -1,4 +1,4 @@
-// classic Oren-Nayar vertex shader
+// classic physic-based vertex shader
 #version 410
 
 layout( location = 0 ) in vec4 Position;

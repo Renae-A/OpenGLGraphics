@@ -95,13 +95,13 @@ int MyApplication::startup()
 	}
 
 	// load vertex oren-nayar BRDF shader from file
-	m_orenNayarShadar.loadShader(aie::eShaderStage::VERTEX,
-		"./shaders/oren-nayar.vert");
+	m_physicBasedShadar.loadShader(aie::eShaderStage::VERTEX,
+		"./shaders/physic-based.vert");
 	// load fragment normal map shader from file
-	m_orenNayarShadar.loadShader(aie::eShaderStage::FRAGMENT,
-		"./shaders/oren-nayar.frag");
-	if (m_orenNayarShadar.link() == false) {
-		printf("Shader Error: %s\n", m_orenNayarShadar.getLastError());
+	m_physicBasedShadar.loadShader(aie::eShaderStage::FRAGMENT,
+		"./shaders/physic-based.frag");
+	if (m_physicBasedShadar.link() == false) {
+		printf("Shader Error: %s\n", m_physicBasedShadar.getLastError());
 	}
 
 
@@ -217,8 +217,8 @@ int MyApplication::startup()
 	0, 0, 0, 1	};
 
 	// Light settings
-	m_light.diffuse = { 1, 1, 0 };
-	m_light.specular = { 1, 1, 0 };
+	m_light.diffuse = { 1, 1, 1 };
+	m_light.specular = { 1, 1, 1 };
 	m_ambientLight = { 0.25f, 0.25f, 0.25f };
 
 	return 0;
@@ -244,7 +244,10 @@ bool MyApplication::update()
 	m_prevTime = m_currTime;
 
 	// Rotate light
-	m_light.direction = glm::normalize(vec3(glm::cos(m_currTime * 2), glm::sin(m_currTime * 2), 0));
+	//m_light.direction = glm::normalize(vec3(glm::cos(m_currTime * 2), glm::sin(m_currTime * 2), 0));
+
+	// Set light 
+	m_light.direction = glm::normalize(glm::vec3(7.0f, -3.0f, 5.0f));
 
 	// Draw 
 
@@ -442,20 +445,21 @@ bool MyApplication::update()
 	// ------------------- (Shiny look) Oren-Nayar BRDF for dragon -------------------- 
 
 	// Bind Oren-Nayar BDRF shader program
-	m_orenNayarShadar.bind();
+	m_physicBasedShadar.bind();
 	// bind light
-	m_orenNayarShadar.bindUniform("Ia", m_ambientLight);
-	m_orenNayarShadar.bindUniform("Id", m_light.diffuse);
-	m_orenNayarShadar.bindUniform("Is", m_light.specular);
-	m_orenNayarShadar.bindUniform("LightDirection", m_light.direction);
-	m_orenNayarShadar.bindUniform("Roughness", 0.5f);
+	m_physicBasedShadar.bindUniform("Ia", m_ambientLight);
+	m_physicBasedShadar.bindUniform("Id", m_light.diffuse);
+	m_physicBasedShadar.bindUniform("Is", m_light.specular);
+	m_physicBasedShadar.bindUniform("LightDirection", m_light.direction);
+	m_physicBasedShadar.bindUniform("Roughness", 0.05f);
+	m_physicBasedShadar.bindUniform("ReflectionCoefficient", 0.5f);
 	// bind transform
 	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
-	m_orenNayarShadar.bindUniform("ProjectionViewModel", pvm);
+	m_physicBasedShadar.bindUniform("ProjectionViewModel", pvm);
 	// bind transforms for lighting
-	m_orenNayarShadar.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	m_physicBasedShadar.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
 	// Bind camera
-	m_orenNayarShadar.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	m_physicBasedShadar.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// draw dragon
 	m_dragonMesh.draw();
 

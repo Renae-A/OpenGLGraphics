@@ -106,10 +106,10 @@
     <None Include="..\data\shaders\normalmap.vert">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\data\shaders\oren-nayar.frag">
+    <None Include="..\data\shaders\physic-based.frag">
       <Filter>Shaders</Filter>
     </None>
-    <None Include="..\data\shaders\oren-nayar.vert">
+    <None Include="..\data\shaders\physic-based.vert">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

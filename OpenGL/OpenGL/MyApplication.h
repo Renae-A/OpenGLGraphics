@@ -41,7 +41,7 @@ private:
 	aie::ShaderProgram	m_texturedShader;
 	aie::ShaderProgram	m_phongShader;
 	aie::ShaderProgram	m_normalMapShader;
-	aie::ShaderProgram	m_orenNayarShadar;
+	aie::ShaderProgram	m_physicBasedShadar;
 
 	aie::Texture		m_gridTexture;
 	aie::Texture		m_denimTexture;

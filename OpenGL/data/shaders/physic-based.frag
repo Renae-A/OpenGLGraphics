@@ -1,4 +1,4 @@
-// classic Oren-Nayar fragment shader
+// classic physic-based fragment shader
 #version 410
 
 in vec2 vTexCoord;
@@ -19,6 +19,7 @@ uniform vec3 Is;				// specular light colour
 uniform vec3 LightDirection;
 uniform vec3 CameraPosition;
 uniform float Roughness;
+uniform float ReflectionCoefficient;
 
 uniform sampler2D diffuseTex;
 
@@ -33,15 +34,11 @@ void main()
 
 	vec3 texDiffuse = texture( diffuseTex, vTexCoord ).rgb;
 
-	// calculate lambert term (negate light direction)
-	float lambertTerm = max( 0, min( 1, dot( N, -L ) ) );
-
 	// calculate view vector and reflection vector
 	vec3 V = normalize(CameraPosition - vPosition.xyz);
 	vec3 R = reflect( L, N );
 
-	// calculate specular term
-	float specularTerm = pow( max( 0, dot( R, V ) ), specularPower );
+	// ---------------- Oren-Nayar ------------------
 
 	float NdL = max( 0.0f, dot( N, L ) );
 	float NdE = max( 0.0f, dot( N, E ) );
@@ -64,10 +61,38 @@ void main()
 	// Calculate Oren-Nayar, replaces the Phong L
 	float OrenNayar = NdL * (A + B * CX * DX);
 
+	// --------------- Cook-Torrance -------------------
+
+	// Vector average H of the light vector L and view vector E
+	vec3 H = normalize(( L + E ) / 2 ); 
+
+	float NdH = max( 0.0f, dot( N, H ) );
+	float NdH2 = NdH * NdH;
+	float e = 2.71828182845904523536028747135f;
+	float pi = 3.1415926535897932384626433832f;
+
+	// Beckman's Distribution Function D
+	float exponent = -(1 - NdH2) / (NdH2 * R2);
+	float D = pow( e, exponent ) / (R2 * NdH2 * NdH2);
+
+	// Fresnel Term F
+	float rf = ReflectionCoefficient;
+	float F = rf + (1-rf) * pow(1-NdE , 5);
+	//float F = ReflectionCoefficient + (1 – ReflectionCoefficient) * pow( 1 - NdE, 5 );
+
+	// Geometric Attenuation Factor G
+	float X = 2.0f * NdH / dot( E, H );
+	float G = min(1, min(X * NdL, X * NdE));
+
+	// Calculate Cook-Torrance
+	float CookTorrance = max( (D*G*F) / (NdE * pi), 0.0f );
+
+	// --------------- Final Colour Output --------------------
+
 	// calculate each colour property
 	vec3 ambient = Ia * Ka;
 	vec3 diffuse = Id * Kd * OrenNayar;
-	vec3 specular = Is * Ks * specularTerm;
+	vec3 specular = Is * Ks * CookTorrance;
 	
 	// output final colour
 	FragColour = vec4( ambient + diffuse + specular, 1);
