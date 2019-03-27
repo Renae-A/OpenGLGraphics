@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "Shader.h"
 #include "OBJMesh.h"
+#include "RenderTarget.h"
 
 class MyApplication
 {
@@ -34,15 +35,20 @@ private:
 		glm::vec3 specular;
 	};
 
+	aie::RenderTarget	m_renderTarget;
+
+	// Lighting
 	Light				m_light;
 	glm::vec3			m_ambientLight;
 
+	// Shaders
 	aie::ShaderProgram	m_shader;
 	aie::ShaderProgram	m_texturedShader;
 	aie::ShaderProgram	m_phongShader;
 	aie::ShaderProgram	m_normalMapShader;
 	aie::ShaderProgram	m_physicBasedShadar;
 
+	// Textures
 	aie::Texture		m_gridTexture;
 	aie::Texture		m_denimTexture;
 	aie::Texture		m_popcornTexture;
@@ -51,6 +57,7 @@ private:
 	aie::Texture		m_lightningTexture;
 	aie::Texture		m_tartanTexture;
 
+	// Meshes and their respective transforms
 	Mesh				m_quadMesh;
 	glm::mat4			m_quadTransform;
 
