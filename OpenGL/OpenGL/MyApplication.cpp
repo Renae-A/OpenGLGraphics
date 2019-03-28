@@ -210,11 +210,11 @@ int MyApplication::startup()
 		0, 0, 0, 1 };
 
 	// Spear ---------------------------------------
-	//if (m_spearMesh.load("./soulspear/soulspear.obj",
-	//	true, true) == false) {
-	//	printf("Soulspear Mesh Error!\n");
-	//	return false;
-	//}
+	if (m_spearMesh.load("./soulspear/soulspear.obj",
+		true, true) == false) {
+		printf("Soulspear Mesh Error!\n");
+		return false;
+	}
 
 	m_spearTransform = {
 	1, 0, 0, 0,
@@ -291,13 +291,13 @@ bool MyApplication::update()
 
 	// ------------------- Simple shader for quad --------------------
 
-	//// Bind shader
-	//m_shader.bind();
-	//// Bind transform
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
-	//m_shader.bindUniform("ProjectionViewModel", pvm);
-	//// Draw quad
-	//m_quadMesh.draw();
+	// Bind shader
+	m_shader.bind();
+	// Bind transform
+	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
+	m_shader.bindUniform("ProjectionViewModel", pvm);
+	// Draw quad
+	m_quadMesh.draw();
 
 	// ------------------- Simple shader for bunny --------------------
 
@@ -417,17 +417,19 @@ bool MyApplication::update()
 	//m_phongShader.bind();
 	//// bind light
 	//m_phongShader.bindUniform("Ia", m_ambientLight);
-	//m_phongShader.bindUniform("Id", m_light.diffuse);
-	//m_phongShader.bindUniform("Is", m_light.specular);
 
 	//m_phongShader.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
 	//m_phongShader.bindUniform("m_lightCount", m_lightCount);
+	//m_phongShader.bindUniform("m_lightColors", 4, &m_lightColors[0]);
+	//m_phongShader.bindUniform("m_lightPower", 4, &m_lightPower[0]);
+	//m_phongShader.bindUniform("specularPower", 0.5f);
 
 	//// bind transform
 	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_buddhaTransform;
 	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
 	//// bind transforms for lighting
 	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_buddhaTransform)));
+	//m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	//// draw buddha
 	//m_buddhaMesh.draw();
 
@@ -445,33 +447,33 @@ bool MyApplication::update()
 	//m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
 	//m_normalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
 	//// Bind camera
-	//m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	//m_normalMapShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	//// Draw spear
 	//m_spearMesh.draw();
 
 	// ------------------- Phong shader with texture for dragon -------------------- 
 
-	// Bind shader
-	m_phongShader.bind();
-	// Bind light 
-	m_phongShader.bindUniform("Ia", m_ambientLight);
-	m_phongShader.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
-	m_phongShader.bindUniform("m_lightCount", m_lightCount);
-	m_phongShader.bindUniform("m_lightColors", 4, &m_lightColors[0]);
-	m_phongShader.bindUniform("m_lightPower", 4, &m_lightPower[0]);
-	m_phongShader.bindUniform("specularPower", 0.5f);
-	// Bind transform
-	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
-	m_phongShader.bindUniform("ProjectionViewModel", pvm);
-	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
-	// Bind camera
-	m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
-	// Bind texture location
-	m_phongShader.bindUniform("diffuseTex", 0);
-	// Bind texture to specified location
-	m_denimTexture.bind(0);
-	// Draw dragon
-	m_dragonMesh.draw();
+	//// Bind shader
+	//m_phongShader.bind();
+	//// Bind light 
+	//m_phongShader.bindUniform("Ia", m_ambientLight);
+	//m_phongShader.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
+	//m_phongShader.bindUniform("m_lightCount", m_lightCount);
+	//m_phongShader.bindUniform("m_lightColors", 4, &m_lightColors[0]);
+	//m_phongShader.bindUniform("m_lightPower", 4, &m_lightPower[0]);
+	//m_phongShader.bindUniform("specularPower", 0.5f);
+	//// Bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
+	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	//// Bind camera
+	//m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	//// Bind texture location
+	//m_phongShader.bindUniform("diffuseTex", 0);
+	//// Bind texture to specified location
+	//m_denimTexture.bind(0);
+	//// Draw dragon
+	//m_dragonMesh.draw();
 
 	// ------------------- (Shiny look) Oren-Nayar BRDF for dragon -------------------- 
 
