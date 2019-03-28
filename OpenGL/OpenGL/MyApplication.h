@@ -41,6 +41,14 @@ private:
 	Light				m_light;
 	glm::vec3			m_ambientLight;
 
+	// Multiple lighting
+	glm::vec3			m_pointLightPos[4];
+	glm::vec3			m_lightColors[4];
+	float				m_lightPower[4];
+	int					m_lightCount;
+
+
+
 	// Shaders
 	aie::ShaderProgram	m_shader;
 	aie::ShaderProgram	m_texturedShader;

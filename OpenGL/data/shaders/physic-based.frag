@@ -21,25 +21,18 @@ uniform vec3 CameraPosition;
 uniform float Roughness;
 uniform float ReflectionCoefficient;
 
+uniform vec3	m_pointLightPos[4];
+uniform vec3	m_lightColors[4];
+uniform float	m_lightPower[4];
+uniform int		m_lightCount;
+
 uniform sampler2D diffuseTex;
 
 out vec4 FragColour;
 
-void main() 
+// ---------------- Oren-Nayar ------------------
+float getDiffuse(vec3 L, vec3 N, vec3 E)
 {
-	// ensure normal and light direction are normalised
-	vec3 N = normalize(vNormal);
-	vec3 L = normalize(LightDirection);
-	vec3 E = normalize(CameraPosition - vPosition.xyz);
-
-	vec3 texDiffuse = texture( diffuseTex, vTexCoord ).rgb;
-
-	// calculate view vector and reflection vector
-	vec3 V = normalize(CameraPosition - vPosition.xyz);
-	vec3 R = reflect( L, N );
-
-	// ---------------- Oren-Nayar ------------------
-
 	float NdL = max( 0.0f, dot( N, L ) );
 	float NdE = max( 0.0f, dot( N, E ) );
 	float R2 = Roughness * Roughness;
@@ -61,7 +54,15 @@ void main()
 	// Calculate Oren-Nayar, replaces the Phong L
 	float OrenNayar = NdL * (A + B * CX * DX);
 
-	// --------------- Cook-Torrance -------------------
+	return OrenNayar;
+}
+
+// --------------- Cook-Torrance -------------------
+float getSpecular(vec3 L, vec3 N, vec3 E)
+{
+	float NdL = max( 0.0f, dot( N, L ) );
+	float NdE = max( 0.0f, dot( N, E ) );
+	float R2 = Roughness * Roughness;
 
 	// Vector average H of the light vector L and view vector E
 	vec3 H = normalize(( L + E ) / 2 ); 
@@ -87,15 +88,48 @@ void main()
 	// Calculate Cook-Torrance
 	float CookTorrance = max( (D*G*F) / (NdE * pi), 0.0f );
 
+	return CookTorrance;
+}
+
+void main() 
+{
+	// Default values set up
+	vec3 diffuse = vec3(0,0,0);
+	vec3 specular = vec3(0,0,0);
+
+	// ensure normal and light direction are normalised
+	vec3 N = normalize(vNormal);
+	vec3 E = normalize(CameraPosition - vPosition.xyz);
+
+	vec3 texDiffuse = texture( diffuseTex, vTexCoord ).rgb;
+
+	for (int i = 0; i < m_lightCount; i++)
+	{
+		vec3 L = m_pointLightPos[i] - vPosition.xyz;
+
+		// get the distance squared for attentuation 
+		float attenuation = 1.0f / dot(L, L);
+
+		// normalise for dot products inside the functions
+		L = normalize(L);
+
+		diffuse += getDiffuse(L, N, E) * m_lightColors[i] * m_lightPower[i] * attenuation;
+		// attenuate specular by a fixed amount, instead of distance-squared
+
+		specular += getSpecular(L, N, E) * m_lightColors[i] * m_lightPower[i] * 0.1f;
+	}
+
 	// --------------- Final Colour Output --------------------
 
 	// calculate each colour property
 	vec3 ambient = Ia * Ka;
-	vec3 diffuse = Id * Kd * OrenNayar;
-	vec3 specular = Is * Ks * CookTorrance;
+	diffuse = Kd * diffuse;
+	specular = Ks * specular;
 	
 	// output final colour
 	FragColour = vec4( ambient + diffuse + specular, 1);
 
 	//FragColour = vec4(OrenNayar * texDiffuse, 1);
 }
+
+

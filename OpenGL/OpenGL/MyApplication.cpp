@@ -156,10 +156,10 @@ int MyApplication::startup()
 		0, 0, 0, 1		};
 
 	// Bunny -----------------------------------------------
-	if (m_bunnyMesh.load("./stanford/bunny.obj") == false) {
-		printf("Bunny Mesh Error!\n");
-		return false;
-	}
+	//if (m_bunnyMesh.load("./stanford/bunny.obj") == false) {
+	//	printf("Bunny Mesh Error!\n");
+	//	return false;
+	//}
 
 	m_bunnyTransform = {
 		0.5f, 0, 0, 0,
@@ -180,10 +180,10 @@ int MyApplication::startup()
 		0, 0, 0, 1 };
 
 	// Lucy ----------------------------------------------
-	if (m_lucyMesh.load("./stanford/lucy.obj") == false) {
-		printf("Lucy Mesh Error!\n");
-		return false;
-	}
+	//if (m_lucyMesh.load("./stanford/lucy.obj") == false) {
+	//	printf("Lucy Mesh Error!\n");
+	//	return false;
+	//}
 
 	m_lucyTransform = {
 		0.5f, 0, 0, 0,
@@ -204,11 +204,11 @@ int MyApplication::startup()
 		0, 0, 0, 1 };
 
 	// Spear ---------------------------------------
-	if (m_spearMesh.load("./soulspear/soulspear.obj",
-		true, true) == false) {
-		printf("Soulspear Mesh Error!\n");
-		return false;
-	}
+	//if (m_spearMesh.load("./soulspear/soulspear.obj",
+	//	true, true) == false) {
+	//	printf("Soulspear Mesh Error!\n");
+	//	return false;
+	//}
 
 	m_spearTransform = {
 	1, 0, 0, 0,
@@ -220,6 +220,21 @@ int MyApplication::startup()
 	m_light.diffuse = { 1, 1, 1 };
 	m_light.specular = { 1, 1, 1 };
 	m_ambientLight = { 0.25f, 0.25f, 0.25f };
+
+	// Multiple Lights Settings
+	m_pointLightPos[0] = vec3(5, 5, 5);
+	m_pointLightPos[1] = vec3(-5, 5, 5);
+	m_pointLightPos[2] = vec3(-5, 5, -5);
+	m_pointLightPos[3] = vec3(5, 5, -5);
+	m_lightColors[0] = vec3(1, 0, 0);
+	m_lightColors[1] = vec3(0, 1, 0);
+	m_lightColors[2] = vec3(0, 0, 1);
+	m_lightColors[3] = vec3(1, 1, 0);
+	m_lightPower[0] = 100.0f; 
+	m_lightPower[1] = 100.0f;
+	m_lightPower[2] = 100.0f;
+	m_lightPower[3] = 100.0f;
+	m_lightCount = 4;
 
 	return 0;
 }
@@ -246,7 +261,7 @@ bool MyApplication::update()
 	// Rotate light
 	//m_light.direction = glm::normalize(vec3(glm::cos(m_currTime * 2), glm::sin(m_currTime * 2), 0));
 
-	// Set light 
+	// Set up singular light
 	m_light.direction = glm::normalize(glm::vec3(7.0f, -3.0f, 5.0f));
 
 	// Draw 
@@ -261,6 +276,11 @@ bool MyApplication::update()
 	{
 		Gizmos::addLine(vec3(-10 + i, 0, 10), vec3(-10 + i, 0, -10), i == 10 ? white : black);
 		Gizmos::addLine(vec3(10, 0, -10 + i), vec3(-10, 0, -10 + i), i == 10 ? white : black);
+	}
+
+	for (int i = 0; i < m_lightCount; i++)
+	{
+		Gizmos::addSphere(m_pointLightPos[i], 1, 8, 8, vec4(m_lightColors[i], 1));
 	}
 
 	// ------------------- Simple shader for quad --------------------
@@ -385,36 +405,25 @@ bool MyApplication::update()
 	//// draw lucy
 	//m_lucyMesh.draw();
 
-	// ------------------- Lighting with phong shader for buddha --------------------
+	// ------------------- Multiple lighting with phong shader for buddha --------------------
 
-	// bind phong shader program
-	m_phongShader.bind();
-	// bind light
-	m_phongShader.bindUniform("Ia", m_ambientLight);
-	m_phongShader.bindUniform("Id", m_light.diffuse);
-	m_phongShader.bindUniform("Is", m_light.specular);
+	//// bind phong shader program
+	//m_phongShader.bind();
+	//// bind light
+	//m_phongShader.bindUniform("Ia", m_ambientLight);
+	//m_phongShader.bindUniform("Id", m_light.diffuse);
+	//m_phongShader.bindUniform("Is", m_light.specular);
 
-	vec3 PointLightDirections[4];
-	vec3 lightDirection1 = vec3(5.0f, 90.0f, 0.0f);
-	vec3 lightDirection2 = vec3(-5.0f, 35.0f, 78.0f);
-	vec3 lightDirection3 = vec3(60.0f, -81.0f, -90.0f);
-	vec3 lightDirection4 = vec3(-60.0f, 0.0f, -13.0f);
+	//m_phongShader.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
+	//m_phongShader.bindUniform("m_lightCount", m_lightCount);
 
-	PointLightDirections[0] = glm::normalize(lightDirection1);
-	PointLightDirections[1] = glm::normalize(lightDirection2);
-	PointLightDirections[2] = glm::normalize(lightDirection3);
-	PointLightDirections[3] = glm::normalize(lightDirection4);
-
-	m_phongShader.bindUniform("PointLightDirections", 4, &PointLightDirections[0]);
-	m_phongShader.bindUniform("PointLightCount", 4);
-
-	// bind transform
-	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_buddhaTransform;
-	m_phongShader.bindUniform("ProjectionViewModel", pvm);
-	// bind transforms for lighting
-	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_buddhaTransform)));
-	// draw buddha
-	m_buddhaMesh.draw();
+	//// bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_buddhaTransform;
+	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	//// bind transforms for lighting
+	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_buddhaTransform)));
+	//// draw buddha
+	//m_buddhaMesh.draw();
 
 	// ------------------- Normal map shader for spear (make changes within .frag file to change colours to normal, etc.) -------------------- 
 
@@ -458,24 +467,27 @@ bool MyApplication::update()
 
 	// ------------------- (Shiny look) Oren-Nayar BRDF for dragon -------------------- 
 
-	//// Bind Oren-Nayar BDRF shader program
-	//m_physicBasedShadar.bind();
-	//// bind light
-	//m_physicBasedShadar.bindUniform("Ia", m_ambientLight);
-	//m_physicBasedShadar.bindUniform("Id", m_light.diffuse);
-	//m_physicBasedShadar.bindUniform("Is", m_light.specular);
-	//m_physicBasedShadar.bindUniform("LightDirection", m_light.direction);
-	//m_physicBasedShadar.bindUniform("Roughness", 0.05f);
-	//m_physicBasedShadar.bindUniform("ReflectionCoefficient", 0.5f);
-	//// bind transform
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
-	//m_physicBasedShadar.bindUniform("ProjectionViewModel", pvm);
-	//// bind transforms for lighting
-	//m_physicBasedShadar.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
-	//// Bind camera
-	//m_physicBasedShadar.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
-	//// draw dragon
-	//m_dragonMesh.draw();
+	// Bind Oren-Nayar BDRF shader program
+	m_physicBasedShadar.bind();
+	// bind light
+	m_physicBasedShadar.bindUniform("Ia", m_ambientLight);
+
+	m_physicBasedShadar.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
+	m_physicBasedShadar.bindUniform("m_lightCount", m_lightCount);
+	m_physicBasedShadar.bindUniform("m_lightColors", 4, &m_lightColors[0]);
+	m_physicBasedShadar.bindUniform("m_lightPower", 4, &m_lightPower[0]);
+
+	m_physicBasedShadar.bindUniform("Roughness", 0.05f);
+	m_physicBasedShadar.bindUniform("ReflectionCoefficient", 0.5f);
+	// bind transform
+	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
+	m_physicBasedShadar.bindUniform("ProjectionViewModel", pvm);
+	// bind transforms for lighting
+	m_physicBasedShadar.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	// Bind camera
+	m_physicBasedShadar.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	// draw dragon
+	m_dragonMesh.draw();
 
 	// ------------------- Render Target -------------------- 
 
@@ -517,7 +529,8 @@ bool MyApplication::update()
 	//pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
 	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
 	//m_texturedShader.bindUniform("diffuseTex", 0);
-	//m_denimTexture.bind(0);
+	//m_denimTexture.bind(0);
+
 
 	Gizmos::draw(m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix());
 
