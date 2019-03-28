@@ -16,7 +16,6 @@ uniform vec3 Ia;				// ambient light colour
 uniform vec3 Id;				// diffuse light colour
 uniform vec3 Is;				// specular light colour
 
-uniform vec3 LightDirection;
 uniform vec3 CameraPosition;
 uniform float Roughness;
 uniform float ReflectionCoefficient;

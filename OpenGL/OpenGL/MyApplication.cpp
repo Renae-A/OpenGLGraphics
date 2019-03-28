@@ -147,6 +147,12 @@ int MyApplication::startup()
 		return false;
 	}
 
+	if (m_renderTarget.initialise(1, getWindowWidth(),
+		getWindowHeight()) == false) {
+		printf("Render Target Error!\n");
+		return false;
+	}
+
 	m_quadMesh.initialiseQuad();
 
 	m_quadTransform = {
@@ -445,92 +451,101 @@ bool MyApplication::update()
 
 	// ------------------- Phong shader with texture for dragon -------------------- 
 
-	//// Bind shader
-	//m_phongShader.bind();
-	//// Bind light 
-	//m_phongShader.bindUniform("Ia", m_ambientLight);
-	//m_phongShader.bindUniform("Id", m_light.diffuse);
-	//m_phongShader.bindUniform("Is", m_light.specular);
-	//m_phongShader.bindUniform("LightDirection", m_light.direction);
-	//// Bind transform
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
-	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
-	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
-	//// Bind camera
-	//m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
-	//// Bind texture location
-	//m_phongShader.bindUniform("diffuseTex", 0);
-	//// Bind texture to specified location
-	//m_denimTexture.bind(0);
-	//// Draw dragon
-	//m_dragonMesh.draw();
+	// Bind shader
+	m_phongShader.bind();
+	// Bind light 
+	m_phongShader.bindUniform("Ia", m_ambientLight);
+	m_phongShader.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
+	m_phongShader.bindUniform("m_lightCount", m_lightCount);
+	m_phongShader.bindUniform("m_lightColors", 4, &m_lightColors[0]);
+	m_phongShader.bindUniform("m_lightPower", 4, &m_lightPower[0]);
+	m_phongShader.bindUniform("specularPower", 0.5f);
+	// Bind transform
+	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
+	m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	// Bind camera
+	m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	// Bind texture location
+	m_phongShader.bindUniform("diffuseTex", 0);
+	// Bind texture to specified location
+	m_denimTexture.bind(0);
+	// Draw dragon
+	m_dragonMesh.draw();
 
 	// ------------------- (Shiny look) Oren-Nayar BRDF for dragon -------------------- 
 
-	// Bind Oren-Nayar BDRF shader program
-	m_physicBasedShadar.bind();
-	// bind light
-	m_physicBasedShadar.bindUniform("Ia", m_ambientLight);
+	//// Bind Oren-Nayar BDRF shader program
+	//m_physicBasedShadar.bind();
+	//// bind light
+	//m_physicBasedShadar.bindUniform("Ia", m_ambientLight);
 
-	m_physicBasedShadar.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
-	m_physicBasedShadar.bindUniform("m_lightCount", m_lightCount);
-	m_physicBasedShadar.bindUniform("m_lightColors", 4, &m_lightColors[0]);
-	m_physicBasedShadar.bindUniform("m_lightPower", 4, &m_lightPower[0]);
+	//m_physicBasedShadar.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
+	//m_physicBasedShadar.bindUniform("m_lightCount", m_lightCount);
+	//m_physicBasedShadar.bindUniform("m_lightColors", 4, &m_lightColors[0]);
+	//m_physicBasedShadar.bindUniform("m_lightPower", 4, &m_lightPower[0]);
 
-	m_physicBasedShadar.bindUniform("Roughness", 0.05f);
-	m_physicBasedShadar.bindUniform("ReflectionCoefficient", 0.5f);
-	// bind transform
-	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
-	m_physicBasedShadar.bindUniform("ProjectionViewModel", pvm);
-	// bind transforms for lighting
-	m_physicBasedShadar.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
-	// Bind camera
-	m_physicBasedShadar.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
-	// draw dragon
-	m_dragonMesh.draw();
+	//m_physicBasedShadar.bindUniform("Roughness", 0.05f);
+	//m_physicBasedShadar.bindUniform("ReflectionCoefficient", 0.5f);
+	//// bind transform
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
+	//m_physicBasedShadar.bindUniform("ProjectionViewModel", pvm);
+	//// bind transforms for lighting
+	//m_physicBasedShadar.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
+	//// Bind camera
+	//m_physicBasedShadar.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	//// draw dragon
+	//m_dragonMesh.draw();
 
 	// ------------------- Render Target -------------------- 
 
-	//// draw bunny with a light
-	//m_phongShader.bind();
+	//// bind our render target
+	//m_renderTarget.bind();
+
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	//// Bind Oren-Nayar BDRF shader program
+	//m_physicBasedShadar.bind();
 
 	//// bind light
-	//m_phongShader.bindUniform("Ia", m_ambientLight);
-	//m_phongShader.bindUniform("Id", m_light.diffuse);
-	//m_phongShader.bindUniform("Is", m_light.specular);
-	//m_phongShader.bindUniform("LightDirection", m_light.direction);
-	//m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+	//m_physicBasedShadar.bindUniform("Ia", m_ambientLight);
 
+	//m_physicBasedShadar.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
+	//m_physicBasedShadar.bindUniform("m_lightCount", m_lightCount);
+	//m_physicBasedShadar.bindUniform("m_lightColors", 4, &m_lightColors[0]);
+	//m_physicBasedShadar.bindUniform("m_lightPower", 4, &m_lightPower[0]);
 
-	//vec3 m_pointLights[4];
-	//vec3 lightDirection1 = vec3(5.0f, 90.0f, 0.0f);
-	//vec3 lightDirection2 = vec3(-5.0f, 35.0f, 78.0f);
-	//vec3 lightDirection3 = vec3(60.0f, -81.0f, -90.0f);
-	//vec3 lightDirection4 = vec3(-60.0f, 0.0f, -13.0f);
-
-	//m_pointLights[4] = lightDirection1, lightDirection2, lightDirection3, lightDirection4;
-
-	//m_phongShader.bindUniform("PointLights", 4, &m_pointLights[0]);
-	//m_phongShader.bindUniform("PointLightCount", 4);
+	//m_physicBasedShadar.bindUniform("Roughness", 0.05f);
+	//m_physicBasedShadar.bindUniform("ReflectionCoefficient", 0.5f);
 
 	//// bind transform
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_bunnyTransform;
-	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
+	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
+	//m_physicBasedShadar.bindUniform("ProjectionViewModel", pvm);
 
 	//// bind transforms for lighting
-	//m_phongShader.bindUniform("ModelMatrix", m_bunnyTransform);
-	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_bunnyTransform)));
+	//m_physicBasedShadar.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
 
-	//// draw mesh
-	//m_bunnyMesh.draw();
+	//// Bind camera
+	//m_physicBasedShadar.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
+
+	//// draw dragon
+	//m_dragonMesh.draw();
+
+	//// unbind target to return to backbuffer
+	//m_renderTarget.unbind();
+
+	//// clear the backbuffer
+	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	//// bind texturing shader
 	//m_texturedShader.bind();
 	//pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
 	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
-	//m_texturedShader.bindUniform("diffuseTex", 0);
-	//m_denimTexture.bind(0);
+	//m_texturedShader.bindUniform("diffuseTexture", 0);
+	//m_renderTarget.getTarget(0).bind(0);
 
+	//// draw quad
+	//m_quadMesh.draw();
 
 	Gizmos::draw(m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix());
 

@@ -19,19 +19,33 @@ uniform vec3 Is;				// specular light colour
 uniform vec3 LightDirection;
 uniform vec3 CameraPosition;
 
-vec3 m_pointLightPos[4];
-uniform int PointLightCount;
+uniform vec3	m_pointLightPos[4];
+uniform vec3	m_lightColors[4];
+uniform float	m_lightPower[4];
+uniform int		m_lightCount;
 
 uniform sampler2D diffuseTex;
 
 out vec4 FragColour;
 
+float getDiffuse(vec3 L){
+	return max(0, dot(vNormal.xyz, L));
+}
+
+float getSpecular(vec3 L, vec3 N)
+{
+	// calculate view vector and reflection vector
+	vec3 V = normalize(CameraPosition - vPosition.xyz);
+	vec3 R = reflect( L, N );
+
+	return pow( max( 0, dot( R, V ) ), specularPower );
+}
+
+
 void main() 
 {
-    m_pointLightPos[0] = vec3(5.0f, 90.0f, 0.0f);
-    m_pointLightPos[1] = vec3(-5.0f, 35.0f, 78.0f);
-    m_pointLightPos[2] = vec3(60.0f, -81.0f, -90.0f);
-    m_pointLightPos[3] = vec3(-60.0f, 0.0f, -13.0f);
+	vec3 diffuse = vec3(0,0,0);
+	vec3 specular = vec3(0,0,0);
 
 
 	// ensure normal and light direction are normalised
@@ -41,27 +55,26 @@ void main()
 	
 	vec3 V = normalize(CameraPosition - vPosition.xyz);
 
-	float lambertTerm = 0;
-	float specularTerm = 0;
-	for (int i = 0; i < PointLightCount; i++)
+	for (int i = 0; i < m_lightCount; i++)
 	{
-		vec3 L = normalize(m_pointLightPos[i]);
+		vec3 L = m_pointLightPos[i] - vPosition.xyz;
 
-		// calculate lambert term (negate light direction)
-		lambertTerm += max( 0, min( 1, dot( N, -L ) ) );
+		// get the distance squared for attentuation 
+		float attenuation = 1.0f / dot(L, L);
 
-		// calculate view vector and reflection vector
-		
-		vec3 R = reflect( L, N );
+		// normalise for dot products inside the functions
+		L = normalize(L);
 
-		// calculate specular term
-		specularTerm += pow( max( 0, dot( R, V ) ), specularPower );
+		diffuse += getDiffuse(L) * m_lightColors[i] * m_lightPower[i] * attenuation;
+
+		// attenuate specular by a fixed amount, instead of distance-squared
+		specular += getSpecular(L, N) * m_lightColors[i] * m_lightPower[i] * 0.1f;
 	}
 
 	// calculate each colour property
 	vec3 ambient = Ia * Ka;
-	vec3 diffuse = Id * Kd * lambertTerm;
-	vec3 specular = Is * Ks * specularTerm;
+	diffuse = Kd * diffuse * texDiffuse;
+	specular = Ks * specular;
 	
 	// output final colour
 	FragColour = vec4( ambient + diffuse + specular, 1);
