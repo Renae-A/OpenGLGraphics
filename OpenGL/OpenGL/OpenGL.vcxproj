@@ -73,22 +73,22 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(SolutionDir)dep\glfw\lib-vc2015;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
-    <IncludePath>$(SolutionDir)dep\stb;$(SolutionDir)dep;$(SolutionDir)dep\glm;$(SolutionDir)dep\glfw\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)OpenGL\;$(SolutionDir)dep\input;$(SolutionDir)dep\imgui;$(SolutionDir)dep\stb;$(SolutionDir)dep;$(SolutionDir)dep\glm;$(SolutionDir)dep\glfw\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
     <LibraryPath>$(SolutionDir)dep\glfw\lib-vc2015;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
-    <IncludePath>$(SolutionDir)dep\stb;$(SolutionDir)dep;$(SolutionDir)dep\glm;$(SolutionDir)dep\glfw\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)OpenGL\;$(SolutionDir)dep\input;$(SolutionDir)dep\imgui;$(SolutionDir)dep\stb;$(SolutionDir)dep;$(SolutionDir)dep\glm;$(SolutionDir)dep\glfw\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)dep\glfw\lib-vc2015;$(VC_LibraryPath_x86);$(WindowsSDK_LibraryPath_x86);$(NETFXKitsDir)Lib\um\x86</LibraryPath>
-    <IncludePath>$(SolutionDir)dep\stb;$(SolutionDir)dep;$(SolutionDir)dep\glm;$(SolutionDir)dep\glfw\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)OpenGL\;$(SolutionDir)dep\input;$(SolutionDir)dep\imgui;$(SolutionDir)dep\stb;$(SolutionDir)dep;$(SolutionDir)dep\glm;$(SolutionDir)dep\glfw\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <LibraryPath>$(SolutionDir)dep\glfw\lib-vc2015;$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(NETFXKitsDir)Lib\um\x64</LibraryPath>
-    <IncludePath>$(SolutionDir)dep\stb;$(SolutionDir)dep;$(SolutionDir)dep\glm;$(SolutionDir)dep\glfw\include;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
+    <IncludePath>$(SolutionDir)OpenGL\;$(SolutionDir)dep\input;$(SolutionDir)dep\imgui;$(SolutionDir)dep\stb;$(SolutionDir)dep;$(SolutionDir)dep\glm;$(SolutionDir)dep\glfw\include;$(VC_IncludePath);$(WindowsSDK_IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -163,6 +163,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\dep\imgui\imgui_glfw3.h" />
     <ClInclude Include="Mesh.h" />
     <ClInclude Include="MyApplication.h" />
     <ClInclude Include="Camera.h" />
@@ -175,6 +176,10 @@
     <ClInclude Include="tiny_obj_loader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\dep\imgui\imgui.cpp" />
+    <ClCompile Include="..\dep\imgui\imgui_demo.cpp" />
+    <ClCompile Include="..\dep\imgui\imgui_draw.cpp" />
+    <ClCompile Include="..\dep\imgui\imgui_glfw3.cpp" />
     <ClCompile Include="Mesh.cpp" />
     <ClCompile Include="MyApplication.cpp" />
     <ClCompile Include="Camera.cpp" />

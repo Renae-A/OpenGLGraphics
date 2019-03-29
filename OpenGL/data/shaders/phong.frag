@@ -16,7 +16,6 @@ uniform vec3 Ia;				// ambient light colour
 uniform vec3 Id;				// diffuse light colour
 uniform vec3 Is;				// specular light colour
 
-uniform vec3 LightDirection;
 uniform vec3 CameraPosition;
 
 uniform vec3	m_pointLightPos[4];
@@ -73,7 +72,7 @@ void main()
 
 	// calculate each colour property
 	vec3 ambient = Ia * Ka;
-	diffuse = Kd * diffuse /* * texDiffuse */;
+	diffuse = Kd * diffuse;
 	specular = Ks * specular;
 	
 	// output final colour

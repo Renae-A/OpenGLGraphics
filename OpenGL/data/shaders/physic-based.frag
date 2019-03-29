@@ -122,7 +122,7 @@ void main()
 
 	// calculate each colour property
 	vec3 ambient = Ia * Ka;
-	diffuse = Kd * diffuse;
+	diffuse = Kd * diffuse * texDiffuse;
 	specular = Ks * specular;
 	
 	// output final colour
