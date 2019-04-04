@@ -12,9 +12,9 @@ public:
 	MyApplication();				// Default constructor initialises time member variables
 	virtual ~MyApplication();		// Virtual destructor
 
-	int startup();					//
-	void shutdown();
-	bool update();
+	int startup();					// Sets up a window, transforms, and lighting. Loads all shaders, textures and meshes. Initialises quads and render target. Creates imgui window. Returns an int determining success
+	void shutdown();				// Destroys imgui window, gizmos and window
+	bool update();					// Updates everything on screen - returns true for if the user hits escape to exit the application (stops updating)
 	void loadShaders();				// Loads in the different shaders for use - will display error is issues occur
 	bool loadTextures();			// Loads in the different textures for use - will display error is issues occur
 	bool intialiseRenderTarget();	// Initialises the render target for use - will display error is issues occur
@@ -23,49 +23,40 @@ public:
 	void setUpLighting();			// Creates four light sources and gives them an equal power of 100 and positions them around the mesh position
 
 	void updateTime();				// Ensures the current, previous and delta time are updated accordingly
-	void checkIMGUIValues();		// Checks for changes made by the user the imGui tools on 
-	void updateLighting();
+	void checkIMGUIValues();		// Checks for changes made by the user on the imGui tool and runs which demonstration the user has selected
+	void updateLighting();			// Checks for changes made by the user on the imGui tool and changes color of lights to user's choice
 
-	void simpleShaderQuad();
-	void simpleShaderBunny();
-	void simpleShaderDragon();
-	void simpleShaderBuddha();
-	void simpleShaderLucy();
-	void simpleShaderSpear();
+	void simpleShaderQuad();		// Draws a quad using the simple shader (checks if render target is on and applies accordingly)
+	void simpleShaderBunny();		// Draws a bunny using the simple shader (checks if render target is on and applies accordingly)
+	void simpleShaderDragon();		// Draws a dragon using the simple shader (checks if render target is on and applies accordingly)
+	void simpleShaderBuddha();		// Draws a buddha using the simple shader (checks if render target is on and applies accordingly)
+	void simpleShaderLucy();		// Draws a lucy using the simple shader (checks if render target is on and applies accordingly)
+	void simpleShaderSpear();		// Draws a spear using the simple shader (checks if render target is on and applies accordingly)
 
-	void texturedShaderQuad();
-	void texturedShaderBunny();
-	void texturedShaderDragon();
-	void texturedShaderBuddha();
-	void texturedShaderLucy();
-	void texturedShaderSpear();
+	void texturedShaderQuad();		// Draws a quad using the textured shader (checks if render target is on and applies accordingly)
+	void texturedShaderSpear();		// Draws a spear using the textured shader (checks if render target is on and applies accordingly)
 
-	void phongShaderQuad();
-	void phongShaderBunny();
-	void phongShaderDragon();
-	void phongShaderBuddha();
-	void phongShaderLucy();
-	void phongShaderSpear();
+	void phongShaderQuad();			// Draws a quad using the phong shader (checks if render target is on and applies accordingly)	
+	void phongShaderBunny();		// Draws a bunny using the phong shader (checks if render target is on and applies accordingly)
+	void phongShaderDragon();		// Draws a dragon using the phong shader (checks if render target is on and applies accordingly)
+	void phongShaderBuddha();		// Draws a buddha using the phong shader (checks if render target is on and applies accordingly)
+	void phongShaderLucy();			// Draws a lucy using the phong shader (checks if render target is on and applies accordingly)
+	void phongShaderSpear();		// Draws a spear using the phong shader (checks if render target is on and applies accordingly)
 
-	void normalMapShaderQuad();
-	void normalMapShaderBunny();
-	void normalMapShaderDragon();
-	void normalMapShaderBuddha();
-	void normalMapShaderLucy();
-	void normalMapShaderSpear();
+	void normalMapShaderSpear();	// Draws a spear using the normal map shader (checks if render target is on and applies accordingly)
 
-	void physicsBasedShaderQuad();
-	void physicsBasedShaderBunny();
-	void physicsBasedShaderDragon();
-	void physicsBasedShaderBuddha();
-	void physicsBasedShaderLucy();
-	void physicsBasedShaderSpear();
+	void physicsBasedShaderQuad();	// Draws a quad using the physicsBased shader (checks if render target is on and applies accordingly)	
+	void physicsBasedShaderBunny();	// Draws a bunny using the physicsBased shader (checks if render target is on and applies accordingly)
+	void physicsBasedShaderDragon();// Draws a dragon using the physicsBased shader (checks if render target is on and applies accordingly)
+	void physicsBasedShaderBuddha();// Draws a buddha using the physicsBased shader (checks if render target is on and applies accordingly)
+	void physicsBasedShaderLucy();	// Draws a lucy using the physicsBased shader (checks if render target is on and applies accordingly)
+	void physicsBasedShaderSpear();	// Draws a spear using the physicsBased shader (checks if render target is on and applies accordingly)
 
-	void renderTargetStart();
-	void renderTargetEnd();
+	void renderTargetStart();		// Binds the render target and clears the screen
+	void renderTargetEnd();			// Unbinds the render target, clears the screen and draws a textured quad with the rendered image
 
-	unsigned int getWindowWidth();
-	unsigned int getWindowHeight();
+	unsigned int getWindowWidth();	// Returns unsigned int of the window's width
+	unsigned int getWindowHeight();	// Returns unsigned int of the window's height
 
 	void IMGUITools();
 
@@ -127,7 +118,7 @@ private:
 	aie::OBJMesh		m_buddhaMesh;
 	glm::mat4			m_buddhaTransform;
 
-	// IMGUI
+	// IMGUI variables
 	int imgui_renderTarget = 0;
 	int imgui_shader = 0;
 	int imgui_model = 0;
