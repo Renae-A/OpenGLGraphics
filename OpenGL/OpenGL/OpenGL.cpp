@@ -7,12 +7,17 @@
 
 int main()
 {
+	// allocation
 	MyApplication* app = new MyApplication();
+
+	// initialise and loop
 	if (app->startup() == 0) 
 	{
 		while (app->update() == true) { }
 		app->shutdown();
 	}
+
+	// deallocation
 	delete app;
 
 	return 0;

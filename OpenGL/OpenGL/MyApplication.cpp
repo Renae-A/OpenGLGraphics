@@ -15,6 +15,7 @@ using glm::mat4;
 
 using namespace aie;
 
+// Default constructor initialises time member variables
 MyApplication::MyApplication()
 {
 	m_prevTime = glfwGetTime();
@@ -22,6 +23,7 @@ MyApplication::MyApplication()
 	m_deltaTime = 0;
 }
 
+// Virtual destructor
 MyApplication::~MyApplication()
 {
 }
@@ -66,6 +68,8 @@ int MyApplication::startup()
 	intialiseRenderTarget();
 
 	m_quadMesh.initialiseQuad();
+
+	m_quadMesh2.initialiseQuad();
 
 	setUpTransforms();
 
@@ -121,181 +125,6 @@ bool MyApplication::update()
 
 	checkIMGUIValues();
 
-	// ------------------- Textured shader for quad --------------------
-
-	//// Bind shader
-	//m_texturedShader.bind();
-	//// Bind transform
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
-	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
-	//// Bind texture location
-	//m_texturedShader.bindUniform("diffuseTexture", 0);
-	//// Bind texture to specified location
-	//m_gridTexture.bind(0);
-	//// Draw quad
-	//m_quadMesh.draw();
-
-	// ------------------- Textured shader for spear --------------------
-
-	//// Bind shader
-	//m_texturedShader.bind();
-	//// Bind transform
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_spearTransform;
-	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
-	//// Draw mesh
-	//m_spearMesh.draw();
-
-	// ------------------- Lighting with phong shader for bunny --------------------
-
-	//// bind phong shader program
-	//m_phongShader.bind();
-	//// bind light
-	//m_phongShader.bindUniform("Ia", m_ambientLight);
-	//m_phongShader.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
-	//m_phongShader.bindUniform("m_lightCount", m_lightCount);
-	//m_phongShader.bindUniform("m_lightColors", 4, &m_lightColors[0]);
-	//m_phongShader.bindUniform("m_lightPower", 4, &m_lightPower[0]);
-	//m_phongShader.bindUniform("specularPower", 0.5f);
-	//// bind transform
-	//auto pvm2 = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_bunnyTransform;
-	//m_phongShader.bindUniform("ProjectionViewModel", pvm2);
-	//// bind transforms for lighting
-	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_bunnyTransform)));
-	//// draw bunny
-	//m_bunnyMesh.draw();
-
-	// ------------------- Lighting with phong shader for dragon --------------------
-
-	//// bind phong shader program
-	//m_phongShader.bind();
-	//// bind light
-	//m_phongShader.bindUniform("Ia", m_ambientLight);
-	//m_phongShader.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
-	//m_phongShader.bindUniform("m_lightCount", m_lightCount);
-	//m_phongShader.bindUniform("m_lightColors", 4, &m_lightColors[0]);
-	//m_phongShader.bindUniform("m_lightPower", 4, &m_lightPower[0]);
-	//m_phongShader.bindUniform("specularPower", 0.5f);
-	//// bind transform
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
-	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
-	//// bind transforms for lighting
-	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
-	//// draw dragon
-	//m_dragonMesh.draw();
-
-	// ------------------- Lighting with phong shader for lucy --------------------
-
-	//// bind phong shader program
-	//m_phongShader.bind();
-	//// bind light
-	//m_phongShader.bindUniform("Ia", m_ambientLight);
-	//m_phongShader.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
-	//m_phongShader.bindUniform("m_lightCount", m_lightCount);
-	//m_phongShader.bindUniform("m_lightColors", 4, &m_lightColors[0]);
-	//m_phongShader.bindUniform("m_lightPower", 4, &m_lightPower[0]);
-	//m_phongShader.bindUniform("specularPower", 0.5f);
-	//// bind transform
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_lucyTransform;
-	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
-	//// bind transforms for lighting
-	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_lucyTransform)));
-	//// draw lucy
-	//m_lucyMesh.draw();
-
-	// ------------------- Multiple lighting with phong shader for buddha --------------------
-
-	//// bind phong shader program
-	//m_phongShader.bind();
-	//// bind light
-	//m_phongShader.bindUniform("Ia", m_ambientLight);
-
-	//m_phongShader.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
-	//m_phongShader.bindUniform("m_lightCount", m_lightCount);
-	//m_phongShader.bindUniform("m_lightColors", 4, &m_lightColors[0]);
-	//m_phongShader.bindUniform("m_lightPower", 4, &m_lightPower[0]);
-	//m_phongShader.bindUniform("specularPower", 0.5f);
-
-	//// bind transform
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_buddhaTransform;
-	//m_phongShader.bindUniform("ProjectionViewModel", pvm);
-	//// bind transforms for lighting
-	//m_phongShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_buddhaTransform)));
-	//m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
-	//// draw buddha
-	//m_buddhaMesh.draw();
-
-	// ------------------- Normal map shader for spear (make changes within .frag file to change colours to normal, etc.) -------------------- 
-
-	//// Bind shader
-	//m_normalMapShader.bind();
-	//// Bind light 
-	//m_normalMapShader.bindUniform("Ia", m_ambientLight);
-	//m_normalMapShader.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
-	//m_normalMapShader.bindUniform("m_lightCount", m_lightCount);
-	//m_normalMapShader.bindUniform("m_lightColors", 4, &m_lightColors[0]);
-	//m_normalMapShader.bindUniform("m_lightPower", 4, &m_lightPower[0]);
-	//m_normalMapShader.bindUniform("specularPower", 0.5f);
-	//// Bind transform
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_spearTransform;
-	//m_normalMapShader.bindUniform("ProjectionViewModel", pvm);
-	//m_normalMapShader.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_spearTransform)));
-	//// Bind camera
-	//m_normalMapShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
-	//// Draw spear
-	//m_spearMesh.draw();
-
-
-
-	// ------------------- Render Target -------------------- 
-
-	//// bind our render target
-	//m_renderTarget.bind();
-
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//// Bind Oren-Nayar BDRF shader program
-	//m_physicBasedShadar.bind();
-
-	//// bind light
-	//m_physicBasedShadar.bindUniform("Ia", m_ambientLight);
-
-	//m_physicBasedShadar.bindUniform("m_pointLightPos", 4, &m_pointLightPos[0]);
-	//m_physicBasedShadar.bindUniform("m_lightCount", m_lightCount);
-	//m_physicBasedShadar.bindUniform("m_lightColors", 4, &m_lightColors[0]);
-	//m_physicBasedShadar.bindUniform("m_lightPower", 4, &m_lightPower[0]);
-
-	//m_physicBasedShadar.bindUniform("Roughness", 0.05f);
-	//m_physicBasedShadar.bindUniform("ReflectionCoefficient", 0.5f);
-
-	//// bind transform
-	//auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_dragonTransform;
-	//m_physicBasedShadar.bindUniform("ProjectionViewModel", pvm);
-
-	//// bind transforms for lighting
-	//m_physicBasedShadar.bindUniform("NormalMatrix", glm::inverseTranspose(glm::mat3(m_dragonTransform)));
-
-	//// Bind camera
-	//m_physicBasedShadar.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
-
-	//// draw dragon
-	//m_dragonMesh.draw();
-
-	//// unbind target to return to backbuffer
-	//m_renderTarget.unbind();
-
-	//// clear the backbuffer
-	//glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	//// bind texturing shader
-	//m_texturedShader.bind();
-	//pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
-	//m_texturedShader.bindUniform("ProjectionViewModel", pvm);
-	//m_texturedShader.bindUniform("diffuseTexture", 0);
-	//m_renderTarget.getTarget(0).bind(0);
-
-	//// draw quad
-	//m_quadMesh.draw();
-
 	Gizmos::draw(m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix());
 
 	// draw IMGUI last
@@ -308,6 +137,7 @@ bool MyApplication::update()
 	return (glfwWindowShouldClose(m_window) == false && glfwGetKey(m_window, GLFW_KEY_ESCAPE) != GLFW_PRESS);
 }
 
+// Loads in the different shaders for use - will display error is issues occur
 void MyApplication::loadShaders()
 {
 	// load vertex simple shader from file
@@ -361,6 +191,7 @@ void MyApplication::loadShaders()
 	}
 }
 
+// Loads in the different textures for use - will display error is issues occur
 bool MyApplication::loadTextures()
 {
 	// Grid texture
@@ -374,28 +205,10 @@ bool MyApplication::loadTextures()
 		printf("Failed to load texture!\n");
 		return false;
 	}
-
-	// Carpet texture
-	if (m_carpetTexture.load("./textures/carpet.jpg") == false) {
-		printf("Failed to load texture!\n");
-		return false;
-	}
-
-	// Lightning texture
-	if (m_lightningTexture.load("./textures/lightning.png") == false) {
-		printf("Failed to load texture!\n");
-		return false;
-	}
-
-	// Tartan texture
-	if (m_tartanTexture.load("./textures/tartan.jpg") == false) {
-		printf("Failed to load texture!\n");
-		return false;
-	}
-
 	return true;
 }
 
+// Initialises the render target for use - will display error is issues occur
 bool MyApplication::intialiseRenderTarget()
 {
 	if (m_renderTarget.initialise(1, getWindowWidth(),
@@ -407,6 +220,7 @@ bool MyApplication::intialiseRenderTarget()
 	return true;
 }
 
+// Assigns each matrix4 member variable for object transforms to similar sizes
 void MyApplication::setUpTransforms()
 {
 	m_quadTransform = {
@@ -446,6 +260,7 @@ void MyApplication::setUpTransforms()
 		0, 0, 0, 1 };
 }
 
+// Loads in the stanford models from the data folder
 bool MyApplication::loadStanfordModels()
 {
 	// Bunny -----------------------------------------------
@@ -482,6 +297,7 @@ bool MyApplication::loadStanfordModels()
 	return true;
 }
 
+// Creates four light sources and gives them an equal power of 100 and positions them around the mesh position
 void MyApplication::setUpLighting()
 {
 	// Light settings
@@ -505,6 +321,7 @@ void MyApplication::setUpLighting()
 	m_lightCount = 4;
 }
 
+// Ensures the current, previous and delta time are updated accordingly
 void MyApplication::updateTime()
 {
 	// Update deltaTime
@@ -517,197 +334,196 @@ void MyApplication::checkIMGUIValues()
 {
 	updateLighting();
 
-	if (imgui_renderTarget == 0)
+	switch (imgui_shader)
 	{
-		switch (imgui_shader)
+	case 0:	// If simple
+		switch (imgui_model)
 		{
-		case 0:	// If simple
-			switch (imgui_model)
-			{
-			case 0:	// If quad
-				simpleShaderQuad();
-				break;
-			case 1:	// If bunny
-				simpleShaderBunny();
-				break;
-			case 2:	// If dragon
-				simpleShaderDragon();
-				break;
-			case 3:	// If buddha
-				simpleShaderBuddha();
-				break;
-			case 4:	// If lucy
-				simpleShaderLucy();
-				break;
-			case 5:	// If spear
-				simpleShaderSpear();
-				break;
-			}
+		case 0:	// If quad
+			simpleShaderQuad();
 			break;
-		case 1: // If textured
-			switch (imgui_model)
-			{
-			case 0:	// If quad
-				texturedShaderQuad();
-				break;
-			case 1:	// If bunny
-				texturedShaderBunny();
-				break;
-			case 2:	// If dragon
-				texturedShaderDragon();
-				break;
-			case 3:	// If buddha
-				texturedShaderBuddha();
-				break;
-			case 4:	// If lucy
-				texturedShaderLucy();
-				break;
-			case 5:	// If spear
-				texturedShaderSpear();
-				break;
-			}
+		case 1:	// If bunny
+			simpleShaderBunny();
 			break;
-		case 2: // If phong
-			switch (imgui_model)
-			{
-			case 0:	// If quad
-				phongShaderQuad();
-				break;
-			case 1:	// If bunny
-				phongShaderBunny();
-				break;
-			case 2:	// If dragon
-				phongShaderDragon();
-				break;
-			case 3:	// If buddha
-				phongShaderBuddha();
-				break;
-			case 4:	// If lucy
-				phongShaderLucy();
-				break;
-			case 5:	// If spear
-				phongShaderSpear();
-				break;
-			}
+		case 2:	// If dragon
+			simpleShaderDragon();
 			break;
-		case 3: // If normal map
-			switch (imgui_model)
-			{
-			case 0:	// If quad
-				normalMapShaderQuad();
-				break;
-			case 1:	// If bunny
-				normalMapShaderBunny();
-				break;
-			case 2:	// If dragon
-				normalMapShaderDragon();
-				break;
-			case 3:	// If buddha
-				normalMapShaderBuddha();
-				break;
-			case 4:	// If lucy
-				normalMapShaderLucy();
-				break;
-			case 5:	// If spear
-				normalMapShaderSpear();
-				break;
-			}
+		case 3:	// If buddha
+			simpleShaderBuddha();
 			break;
-		case 4: // If physics based
-			switch (imgui_model)
-			{
-			case 0:	// If quad
-				physicsBasedShaderQuad();
-				break;
-			case 1:	// If bunny
-				physicsBasedShaderBunny();
-				break;
-			case 2:	// If dragon
-				physicsBasedShaderDragon();
-				break;
-			case 3:	// If buddha
-				physicsBasedShaderBuddha();
-				break;
-			case 4:	// If lucy
-				physicsBasedShaderLucy();
-				break;
-			case 5:	// If spear
-				physicsBasedShaderSpear();
-				break;
-			}
+		case 4:	// If lucy
+			simpleShaderLucy();
+			break;
+		case 5:	// If spear
+			simpleShaderSpear();
 			break;
 		}
-			
+		break;
+	case 1: // If textured
+		switch (imgui_model)
+		{
+		case 0:	// If quad
+			texturedShaderQuad();
+			break;
+		case 1:	// If bunny
+			texturedShaderBunny();
+			break;
+		case 2:	// If dragon
+			texturedShaderDragon();
+			break;
+		case 3:	// If buddha
+			texturedShaderBuddha();
+			break;
+		case 4:	// If lucy
+			texturedShaderLucy();
+			break;
+		case 5:	// If spear
+			texturedShaderSpear();
+			break;
+		}
+		break;
+	case 2: // If phong
+		switch (imgui_model)
+		{
+		case 0:	// If quad
+			phongShaderQuad();
+			break;
+		case 1:	// If bunny
+			phongShaderBunny();
+			break;
+		case 2:	// If dragon
+			phongShaderDragon();
+			break;
+		case 3:	// If buddha
+			phongShaderBuddha();
+			break;
+		case 4:	// If lucy
+			phongShaderLucy();
+			break;
+		case 5:	// If spear
+			phongShaderSpear();
+			break;
+		}
+		break;
+	case 3: // If normal map
+		switch (imgui_model)
+		{
+		case 0:	// If quad
+			normalMapShaderQuad();
+			break;
+		case 1:	// If bunny
+			normalMapShaderBunny();
+			break;
+		case 2:	// If dragon
+			normalMapShaderDragon();
+			break;
+		case 3:	// If buddha
+			normalMapShaderBuddha();
+			break;
+		case 4:	// If lucy
+			normalMapShaderLucy();
+			break;
+		case 5:	// If spear
+			normalMapShaderSpear();
+			break;
+		}
+		break;
+	case 4: // If physics based
+		switch (imgui_model)
+		{
+		case 0:	// If quad
+			physicsBasedShaderQuad();
+			break;
+		case 1:	// If bunny
+			physicsBasedShaderBunny();
+			break;
+		case 2:	// If dragon
+			physicsBasedShaderDragon();
+			break;
+		case 3:	// If buddha
+			physicsBasedShaderBuddha();
+			break;
+		case 4:	// If lucy
+			physicsBasedShaderLucy();
+			break;
+		case 5:	// If spear
+			physicsBasedShaderSpear();
+			break;
+		}
+		break;
 	}
 }
 
 void MyApplication::updateLighting()
 {
 	if (imgui_light1 == 0)
-		m_lightColors[0] = vec3(1, 1, 1);
+		m_lightColors[0] = vec3(1, 1, 1);		// White
 	if (imgui_light1 == 1)
-		m_lightColors[0] = vec3(1, 0, 0);
+		m_lightColors[0] = vec3(1, 0, 0);		// Red
 	if (imgui_light1 == 2)
-		m_lightColors[0] = vec3(1, 0.5f, 0);
+		m_lightColors[0] = vec3(1, 0.5f, 0);	// Orange
 	if (imgui_light1 == 3)
-		m_lightColors[0] = vec3(1, 1, 0);
+		m_lightColors[0] = vec3(1, 1, 0);		// Yellow
 	if (imgui_light1 == 4)
-		m_lightColors[0] = vec3(0, 1, 0);
+		m_lightColors[0] = vec3(0, 1, 0);		// Green
 	if (imgui_light1 == 5)
-		m_lightColors[0] = vec3(0, 0, 1);
+		m_lightColors[0] = vec3(0, 0, 1);		// Blue
 	if (imgui_light1 == 6)
-		m_lightColors[0] = vec3(1, 0, 1);
+		m_lightColors[0] = vec3(1, 0, 1);		// Purple
 
 	if (imgui_light2 == 0)
-		m_lightColors[1] = vec3(1, 1, 1);
+		m_lightColors[1] = vec3(1, 1, 1);		// White
 	if (imgui_light2 == 1)
-		m_lightColors[1] = vec3(1, 0, 0);
+		m_lightColors[1] = vec3(1, 0, 0);		// Red
 	if (imgui_light2 == 2)
-		m_lightColors[1] = vec3(1, 0.5f, 0);
+		m_lightColors[1] = vec3(1, 0.5f, 0);	// Orange
 	if (imgui_light2 == 3)
-		m_lightColors[1] = vec3(1, 1, 0);
+		m_lightColors[1] = vec3(1, 1, 0);		// Yellow
 	if (imgui_light2 == 4)
-		m_lightColors[1] = vec3(0, 1, 0);
+		m_lightColors[1] = vec3(0, 1, 0);		// Green
 	if (imgui_light2 == 5)
-		m_lightColors[1] = vec3(0, 0, 1);
+		m_lightColors[1] = vec3(0, 0, 1);		// Blue
 	if (imgui_light2 == 6)
-		m_lightColors[1] = vec3(1, 0, 1);
+		m_lightColors[1] = vec3(1, 0, 1);		// Purple
 
 
 	if (imgui_light3 == 0)
-		m_lightColors[2] = vec3(1, 1, 1);
+		m_lightColors[2] = vec3(1, 1, 1);		// White
 	if (imgui_light3 == 1)
-		m_lightColors[2] = vec3(1, 0, 0);
+		m_lightColors[2] = vec3(1, 0, 0);		// Red
 	if (imgui_light3 == 2)
-		m_lightColors[2] = vec3(1, 0.5f, 0);
+		m_lightColors[2] = vec3(1, 0.5f, 0);	// Orange
 	if (imgui_light3 == 3)
-		m_lightColors[2] = vec3(1, 1, 0);
+		m_lightColors[2] = vec3(1, 1, 0);		// Yellow
 	if (imgui_light3 == 4)
-		m_lightColors[2] = vec3(0, 1, 0);
+		m_lightColors[2] = vec3(0, 1, 0);		// Green
 	if (imgui_light3 == 5)
-		m_lightColors[2] = vec3(0, 0, 1);
+		m_lightColors[2] = vec3(0, 0, 1);		// Blue
 	if (imgui_light3 == 6)
-		m_lightColors[2] = vec3(1, 0, 1);
+		m_lightColors[2] = vec3(1, 0, 1);		// Purple
 
 
 	if (imgui_light4 == 0)
-		m_lightColors[3] = vec3(1, 1, 1);
+		m_lightColors[3] = vec3(1, 1, 1);		// White
 	if (imgui_light4 == 1)
-		m_lightColors[3] = vec3(1, 0, 0);
+		m_lightColors[3] = vec3(1, 0, 0);		// Red
 	if (imgui_light4 == 2)
-		m_lightColors[3] = vec3(1, 0.5f, 0);
+		m_lightColors[3] = vec3(1, 0.5f, 0);	// Orange
 	if (imgui_light4 == 3)
-		m_lightColors[3] = vec3(1, 1, 0);
+		m_lightColors[3] = vec3(1, 1, 0);		// Yellow
 	if (imgui_light4 == 4)
-		m_lightColors[3] = vec3(0, 1, 0);
+		m_lightColors[3] = vec3(0, 1, 0);		// Green
 	if (imgui_light4 == 5)
-		m_lightColors[3] = vec3(0, 0, 1);
+		m_lightColors[3] = vec3(0, 0, 1);		// Blue
 	if (imgui_light4 == 6)
-		m_lightColors[3] = vec3(1, 0, 1);
+		m_lightColors[3] = vec3(1, 0, 1);		// Purple
 }
 
 void MyApplication::simpleShaderQuad()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_shader.bind();
 	// Bind transform
@@ -715,10 +531,16 @@ void MyApplication::simpleShaderQuad()
 	m_shader.bindUniform("ProjectionViewModel", pvm);
 	// Draw quad
 	m_quadMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::simpleShaderBunny()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_shader.bind();
 	// Bind transform
@@ -726,10 +548,16 @@ void MyApplication::simpleShaderBunny()
 	m_shader.bindUniform("ProjectionViewModel", pvm);
 	// Draw bunny
 	m_bunnyMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::simpleShaderDragon()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_shader.bind();
 	// Bind transform
@@ -737,10 +565,16 @@ void MyApplication::simpleShaderDragon()
 	m_shader.bindUniform("ProjectionViewModel", pvm);
 	// Draw dragon
 	m_dragonMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::simpleShaderBuddha()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_shader.bind();
 	// Bind transform
@@ -748,10 +582,16 @@ void MyApplication::simpleShaderBuddha()
 	m_shader.bindUniform("ProjectionViewModel", pvm);
 	// Draw buddha
 	m_buddhaMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::simpleShaderLucy()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_shader.bind();
 	// Bind transform
@@ -759,10 +599,16 @@ void MyApplication::simpleShaderLucy()
 	m_shader.bindUniform("ProjectionViewModel", pvm);
 	// Draw lucy
 	m_lucyMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::simpleShaderSpear()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_shader.bind();
 	// Bind transform
@@ -770,10 +616,16 @@ void MyApplication::simpleShaderSpear()
 	m_shader.bindUniform("ProjectionViewModel", pvm);
 	// Draw spear
 	m_spearMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::texturedShaderQuad()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_texturedShader.bind();
 	// Bind transform
@@ -785,10 +637,16 @@ void MyApplication::texturedShaderQuad()
 	m_gridTexture.bind(0);
 	// Draw quad
 	m_quadMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::texturedShaderBunny()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_texturedShader.bind();
 	// Bind transform
@@ -800,10 +658,16 @@ void MyApplication::texturedShaderBunny()
 	m_gridTexture.bind(0);
 	// Draw bunny
 	m_bunnyMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::texturedShaderDragon()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_texturedShader.bind();
 	// Bind transform
@@ -815,10 +679,16 @@ void MyApplication::texturedShaderDragon()
 	m_gridTexture.bind(0);
 	// Draw dragon
 	m_dragonMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::texturedShaderBuddha()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_texturedShader.bind();
 	// Bind transform
@@ -830,10 +700,16 @@ void MyApplication::texturedShaderBuddha()
 	m_gridTexture.bind(0);
 	// Draw buddha
 	m_buddhaMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::texturedShaderLucy()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_texturedShader.bind();
 	// Bind transform
@@ -845,10 +721,16 @@ void MyApplication::texturedShaderLucy()
 	m_gridTexture.bind(0);
 	// Draw lucy
 	m_lucyMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::texturedShaderSpear()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_texturedShader.bind();
 	// Bind transform
@@ -856,10 +738,16 @@ void MyApplication::texturedShaderSpear()
 	m_texturedShader.bindUniform("ProjectionViewModel", pvm);
 	// Draw mesh
 	m_spearMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::phongShaderQuad()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// bind phong shader program
 	m_phongShader.bind();
 	// bind light
@@ -879,10 +767,16 @@ void MyApplication::phongShaderQuad()
 	m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// draw quad
 	m_quadMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::phongShaderBunny()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// bind phong shader program
 	m_phongShader.bind();
 	// bind light
@@ -902,10 +796,16 @@ void MyApplication::phongShaderBunny()
 	m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// draw bunny
 	m_bunnyMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::phongShaderDragon()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// bind phong shader program
 	m_phongShader.bind();
 	// bind light
@@ -925,10 +825,16 @@ void MyApplication::phongShaderDragon()
 	m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// draw dragon
 	m_dragonMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::phongShaderBuddha()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// bind phong shader program
 	m_phongShader.bind();
 	// bind light
@@ -948,10 +854,16 @@ void MyApplication::phongShaderBuddha()
 	m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// draw buddha
 	m_buddhaMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::phongShaderLucy()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// bind phong shader program
 	m_phongShader.bind();
 	// bind light
@@ -971,10 +883,16 @@ void MyApplication::phongShaderLucy()
 	m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// draw lucy
 	m_lucyMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::phongShaderSpear()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// bind phong shader program
 	m_phongShader.bind();
 	// bind light
@@ -994,10 +912,16 @@ void MyApplication::phongShaderSpear()
 	m_phongShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// draw spear
 	m_spearMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::normalMapShaderQuad()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_normalMapShader.bind();
 	// Bind light 
@@ -1015,10 +939,16 @@ void MyApplication::normalMapShaderQuad()
 	m_normalMapShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// Draw quad
 	m_quadMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::normalMapShaderBunny()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_normalMapShader.bind();
 	// Bind light 
@@ -1036,10 +966,16 @@ void MyApplication::normalMapShaderBunny()
 	m_normalMapShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// Draw bunny
 	m_bunnyMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::normalMapShaderDragon()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_normalMapShader.bind();
 	// Bind light 
@@ -1057,10 +993,16 @@ void MyApplication::normalMapShaderDragon()
 	m_normalMapShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// Draw dragon
 	m_dragonMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::normalMapShaderBuddha()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_normalMapShader.bind();
 	// Bind light 
@@ -1078,10 +1020,16 @@ void MyApplication::normalMapShaderBuddha()
 	m_normalMapShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// Draw buddha
 	m_buddhaMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::normalMapShaderLucy()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_normalMapShader.bind();
 	// Bind light 
@@ -1099,10 +1047,16 @@ void MyApplication::normalMapShaderLucy()
 	m_normalMapShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// Draw lucy
 	m_lucyMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::normalMapShaderSpear()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind shader
 	m_normalMapShader.bind();
 	// Bind light 
@@ -1120,10 +1074,16 @@ void MyApplication::normalMapShaderSpear()
 	m_normalMapShader.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// Draw spear
 	m_spearMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::physicsBasedShaderQuad()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind Oren-Nayar BDRF shader program
 	m_physicBasedShadar.bind();
 	// bind light
@@ -1150,10 +1110,16 @@ void MyApplication::physicsBasedShaderQuad()
 
 	// Draw quad
 	m_quadMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::physicsBasedShaderBunny()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind Oren-Nayar BDRF shader program
 	m_physicBasedShadar.bind();
 	// bind light
@@ -1180,10 +1146,16 @@ void MyApplication::physicsBasedShaderBunny()
 
 	// draw bunny
 	m_bunnyMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::physicsBasedShaderDragon()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind Oren-Nayar BDRF shader program
 	m_physicBasedShadar.bind();
 	// bind light
@@ -1210,10 +1182,16 @@ void MyApplication::physicsBasedShaderDragon()
 
 	// draw dragon
 	m_dragonMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::physicsBasedShaderBuddha()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind Oren-Nayar BDRF shader program
 	m_physicBasedShadar.bind();
 	// bind light
@@ -1240,10 +1218,16 @@ void MyApplication::physicsBasedShaderBuddha()
 
 	// draw buddha
 	m_buddhaMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::physicsBasedShaderLucy()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind Oren-Nayar BDRF shader program
 	m_physicBasedShadar.bind();
 	// bind light
@@ -1270,10 +1254,16 @@ void MyApplication::physicsBasedShaderLucy()
 	
 	// draw lucy
 	m_lucyMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
 }
 
 void MyApplication::physicsBasedShaderSpear()
 {
+	if (imgui_renderTarget == 1)
+		renderTargetStart();
+
 	// Bind Oren-Nayar BDRF shader program
 	m_physicBasedShadar.bind();
 	// bind light
@@ -1295,6 +1285,36 @@ void MyApplication::physicsBasedShaderSpear()
 	m_physicBasedShadar.bindUniform("CameraPosition", vec3(glm::inverse(m_camera.GetViewMatrix())[3]));
 	// draw spear
 	m_spearMesh.draw();
+
+	if (imgui_renderTarget == 1)
+		renderTargetEnd();
+}
+
+void MyApplication::renderTargetStart()
+{
+	// bind our render target
+	m_renderTarget.bind();
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+void MyApplication::renderTargetEnd()
+{
+	// unbind target to return to backbuffer
+	m_renderTarget.unbind();
+
+	// clear the backbuffer
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	// bind texturing shader
+	m_texturedShader.bind();
+	auto pvm = m_camera.GetProjectionMatrix(getWindowWidth(), getWindowHeight()) * m_camera.GetViewMatrix() * m_quadTransform;
+	m_texturedShader.bindUniform("ProjectionViewModel", pvm);
+	m_texturedShader.bindUniform("diffuseTexture", 0);
+	m_renderTarget.getTarget(0).bind(0);
+
+	// draw quad
+	m_quadMesh2.draw();
 }
 
 // Returns the width of the screen
@@ -1315,6 +1335,8 @@ unsigned int MyApplication::getWindowHeight()
 
 void MyApplication::IMGUITools()
 {
+	ImGui::TextWrapped("Note: Textured shader only works for quad and spear, and Normal Map only works for spear");
+
 	if (ImGui::CollapsingHeader("Renderer Target"))
 	{
 		ImGui::RadioButton("Off", &imgui_renderTarget, 0); ImGui::SameLine();

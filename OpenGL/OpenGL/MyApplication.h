@@ -9,21 +9,21 @@
 class MyApplication
 {
 public:
-	MyApplication();
-	virtual ~MyApplication();
+	MyApplication();				// Default constructor initialises time member variables
+	virtual ~MyApplication();		// Virtual destructor
 
-	int startup();
+	int startup();					//
 	void shutdown();
 	bool update();
-	void loadShaders();
-	bool loadTextures();
-	bool intialiseRenderTarget();
-	void setUpTransforms();
-	bool loadStanfordModels();
-	void setUpLighting();
+	void loadShaders();				// Loads in the different shaders for use - will display error is issues occur
+	bool loadTextures();			// Loads in the different textures for use - will display error is issues occur
+	bool intialiseRenderTarget();	// Initialises the render target for use - will display error is issues occur
+	void setUpTransforms();			// Assigns each matrix4 member variable for object transforms to similar sizes
+	bool loadStanfordModels();		// Loads in the stanford models from the data folder
+	void setUpLighting();			// Creates four light sources and gives them an equal power of 100 and positions them around the mesh position
 
-	void updateTime();
-	void checkIMGUIValues();
+	void updateTime();				// Ensures the current, previous and delta time are updated accordingly
+	void checkIMGUIValues();		// Checks for changes made by the user the imGui tools on 
 	void updateLighting();
 
 	void simpleShaderQuad();
@@ -61,6 +61,9 @@ public:
 	void physicsBasedShaderLucy();
 	void physicsBasedShaderSpear();
 
+	void renderTargetStart();
+	void renderTargetEnd();
+
 	unsigned int getWindowWidth();
 	unsigned int getWindowHeight();
 
@@ -91,8 +94,6 @@ private:
 	float				m_lightPower[4];
 	int					m_lightCount;
 
-
-
 	// Shaders
 	aie::ShaderProgram	m_shader;
 	aie::ShaderProgram	m_texturedShader;
@@ -103,12 +104,10 @@ private:
 	// Textures
 	aie::Texture		m_gridTexture;
 	aie::Texture		m_denimTexture;
-	aie::Texture		m_carpetTexture;
-	aie::Texture		m_lightningTexture;
-	aie::Texture		m_tartanTexture;
 
 	// Meshes and their respective transforms
 	Mesh				m_quadMesh;
+	Mesh				m_quadMesh2;
 	glm::mat4			m_quadTransform;
 
 	aie::OBJMesh		m_bunnyMesh;

@@ -1,6 +1,7 @@
 #include "Mesh.h"
 #include "gl_core_4_4.h"
 
+// Mesh destructor destroys vertex arrays and buffers
 Mesh::~Mesh()
 {
 	glDeleteVertexArrays(1, &m_vao);
@@ -8,6 +9,7 @@ Mesh::~Mesh()
 	glDeleteBuffers(1, &m_ibo);
 }
 
+// Intialises a quad with vertices and the normal directed up
 void Mesh::initialiseQuad()
 {
 	// check that the mesh is not initialized already
@@ -69,6 +71,7 @@ void Mesh::initialiseQuad()
 	m_triCount = 2;
 }
 
+// Draw() counts the triangles in the mesh and draws the mesh in the position specified which also reads rotation and the vertices
 void Mesh::draw()
 {
 	glBindVertexArray(m_vao);
